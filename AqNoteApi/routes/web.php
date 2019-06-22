@@ -1,4 +1,11 @@
 <?php
+use Illuminate\Support\Facades\File;
+
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Storage;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,5 +19,15 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+  // metodo per resituire immagini
+  
+  Storage::makeDirectory('directory'); //metodo per creare una directory
+
+  $type = 'image/png';
+  $headers = ['Content-Type' => $type];
+  $path=storage_path('pr.jpeg');
+  $response = new BinaryFileResponse($path, 200 , $headers);
+
+  return $response;
+
 });
