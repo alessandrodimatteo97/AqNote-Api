@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('mail', 50);
             $table->string('password',50 );
             $table->unsignedInteger('matriculationNumber');
-
+            $table->string('api_key');
         });
     }
 

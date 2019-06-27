@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 
 $router->get('/', function () use ($router) {
   // metodo per resituire immagini
-  
+
   Storage::makeDirectory('directory'); //metodo per creare una directory
 
   $type = 'image/png';
@@ -30,4 +30,15 @@ $router->get('/', function () use ($router) {
 
   return $response;
 
+});
+
+
+Route::get('/user', 'Controller@prova1');
+$router->group(['prefix' => 'api/'], function ($router) {
+$router->get('login/','UsersController@authenticate');
+$router->post('todo/','ToDoController@store');
+$router->get('todo/', 'ToDoController@index');
+$router->get('todo/{id}/', 'ToDoController@show');
+$router->put('todo/{id}/', 'ToDoController@update');
+$router->delete('todo/{id}/', 'ToDoController@destroy');
 });
