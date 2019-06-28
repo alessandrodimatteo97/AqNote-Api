@@ -1,10 +1,10 @@
-select * from AqNoteDB.notes;
+select * from AqNoteDB.users;
 
 -- insert for users
-INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `password`, `matriculationNumber`) VALUES ('Alessandro', 'Di Matteo', 'achissimo@gmail.com', 'alessandro', '249192');
-INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `password`, `matriculationNumber`) VALUES ('Davide', 'Fontana', 'davide.fontana@gmai.com', 'davide', '219194');
-INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `password`, `matriculationNumber`) VALUES ('Mario', 'Rossi', 'mario.rossi@gmai.com', 'mario', '249190');
-INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `password`, `matriculationNumber`) VALUES ('Claudio', 'Baglioni', 'claudio.baglioni@gmail.com', 'claudio', '249180');
+INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `matriculationNumber`) VALUES ('Alessandro', 'Di Matteo', 'achissimo@gmail.com', '249192');
+INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`,`matriculationNumber`) VALUES ('Davide', 'Fontana', 'davide.fontana@gmai.com',  '219194');
+INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`, `matriculationNumber`) VALUES ('Mario', 'Rossi', 'mario.rossi@gmai.com',  '249190');
+INSERT INTO `AqNoteDB`.`users` (`name`, `surname`, `mail`,  `matriculationNumber`) VALUES ('Claudio', 'Baglioni', 'claudio.baglioni@gmail.com',  '249180');
 
 -- insert for Departments
 INSERT INTO `AqNoteDB`.`departments` (`nameD`) VALUES ('Disim');
@@ -44,9 +44,9 @@ INSERT INTO `AqNoteDB`.`subjects` (`nameS`, `year`, `degreeCourse_id`) VALUES ('
 -- mancano da inserire materie per: scienze ambinetali, biotecnologie, psicologia, scienze motorie. chimica, ingegneria chimica, economia, ingegneria elettrice, meccanica, energetica e gestionale
 
 -- insert for notes
-INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `degreeCourse_id`) VALUES ('fondamenti di programmazione Appunti ', 'questi appunti sono stati elaborati seguendo le lezione e leggendo le slide', '1', '1');
-INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `degreeCourse_id`) VALUES ('Architettura degli elaboratori Appunti', 'ho preso gli appunti a lezione senza elaborarli', '2', '2');
-INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `degreeCourse_id`) VALUES ('Appunti di fisica 1', 'Grazie a questo formulario e alle sue spiegazioni sono riuscito a prendere 30 a questo esame', '3', '3');
-INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `degreeCourse_id`) VALUES ('Appunti di fisica 2', '***', '4', '4');
-INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `degreeCourse_id`) VALUES ('Appunti di Analisi A', '***', '4', '5');
+INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `subject_id`) VALUES ('fondamenti di programmazione Appunti ', 'questi appunti sono stati elaborati seguendo le lezione e leggendo le slide', '1', '1');
+INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `subject_id`) VALUES ('Architettura degli elaboratori Appunti', 'ho preso gli appunti a lezione senza elaborarli', '2', '2');
+INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `subject_id`) VALUES ('Appunti di fisica 1', 'Grazie a questo formulario e alle sue spiegazioni sono riuscito a prendere 30 a questo esame', '3', '3');
+INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `subject_id`) VALUES ('Appunti di fisica 2', '***', '4', '4');
+INSERT INTO `AqNoteDB`.`notes` (`title`, `description`, `user_id`, `subject_id`) VALUES ('Appunti di Analisi A', '***', '4', '5');
 
