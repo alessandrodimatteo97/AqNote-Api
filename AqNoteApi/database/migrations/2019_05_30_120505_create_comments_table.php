@@ -24,7 +24,7 @@ class CreateCommentsTable extends Migration
             $table->foreign('user_id')
                   ->references('idU')->on('users')
                   ->onDelete('cascade');
-        $table->foreign('note_id')
+            $table->foreign('note_id')
               ->references('idN')->on('notes')
               ->onDelete('cascade');
 
