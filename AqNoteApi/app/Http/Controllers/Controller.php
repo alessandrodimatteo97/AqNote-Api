@@ -14,4 +14,8 @@ class Controller extends BaseController
         'state' => $users[1]
       ]);
   }
+  public function DepartmentsList(){
+      $departments =  DB::table('departments')->select('nameD')->get();
+      return $departments->toJson();
+  }
 }

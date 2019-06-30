@@ -32,6 +32,7 @@ $router->get('/', function () use ($router) {
 
 });
 
+Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
 $router->group(['prefix' => 'api/'], function ($router) {
