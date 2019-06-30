@@ -32,5 +32,19 @@ class UsersController extends Controller
           }else{
               return response()->json(['status' => 'fail'],401);
           }
-       }
+    }
+
+    public function infoUser($id)
+    {
+
+      $user = DB::table('users')->
+              select('idU', 'name', 'surname', 'mail', 'matriculationNumber')->
+              where('idU', $id)->
+              get();
+
+      return response()->
+              json([
+                      'user' => $user
+                  ]);
+    }
 }
