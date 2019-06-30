@@ -37,6 +37,7 @@ Route::get('/api/Departments', 'Controller@DepartmentsList');
 Route::get('/user', 'Controller@prova1');
 $router->group(['prefix' => 'api/'], function ($router) {
 $router->get('login/','UsersController@authenticate');
+$router->get('signup/', 'UsersController@signUp');
 $router->post('todo/','ToDoController@store');
 $router->get('todo/', 'ToDoController@index');
 $router->get('todo/{id}/', 'ToDoController@show');

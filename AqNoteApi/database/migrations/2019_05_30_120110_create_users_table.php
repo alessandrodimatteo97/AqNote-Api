@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('name', 20 );
             $table->string('surname', 50);
             $table->string('mail', 50);
-            $table->string('password',50 )->nullable();
+            $table->text('password',255 )->nullable();
             $table->unsignedInteger('matriculationNumber');
             $table->string('api_key')->nullable();
         });
