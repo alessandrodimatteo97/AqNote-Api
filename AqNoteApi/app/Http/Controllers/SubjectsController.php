@@ -19,18 +19,15 @@ class SubjectsController extends Controller
         //
     }
 
-    public function listSubject($id, $id1)
+    public function listSubject($idC)
     {
 
       $subjects = DB::table('subjects')
                   ->select('id', 'nameS', 'year', 'degreeCourse_id')
-                  ->where('degreeCourse_id', $id1)
+                  ->where('degreeCourse_id', $idC)
                   ->get();
 
-      return response()->
-              json([
-                      'subjects' => $subjects
-                  ]);
+      return $subjects->toJson();
     }
 
     public function infoSubject($idS)
@@ -47,19 +44,38 @@ class SubjectsController extends Controller
                     ]);
     }
 
-    public function listSubYear($id, $id1, $year)
+    public function listSubYear($idC, $year)
     {
 
       $subjects = DB::table('subjects')
                   ->select('id', 'nameS', 'year', 'degreeCourse_id')
-                  ->where('degreeCourse_id', $id1)
+                  ->where('degreeCourse_id', $idC)
                   ->where('year', $year)
                   ->get();
 
-      return response()->
-              json([
-                      'subjects' => $subjects
-                  ]);
+      return $subjects->toJson();
+    }
+
+    public function notesList($idS)
+    {
+
+      $notesList = DB::table('notes')
+                  ->select('idN', 'title', 'description', 'user_id', 'subject_id')
+                  ->where('subject_id', $idS)
+                  ->get();
+      return $notesList->toJson();
+
+    }
+
+    public function notesDetail($idN)
+    {
+
+      $note = DB::table('notes')
+                  ->select('idN', 'title', 'description', 'user_id', 'subject_id')
+                  ->where('idN', $idN)
+                  ->get();
+      return $note->toJson();
+
     }
 
 }

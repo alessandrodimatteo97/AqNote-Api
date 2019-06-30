@@ -19,31 +19,13 @@ class CdlsController extends Controller
         //
     }
 
-    public function listCdl($id0)
+    public function listCdl($idD)
     {
       $cdls = DB::table('degree_courses')
                   ->select('idDC', 'nameDC', 'department_id')
-                  ->where('department_id', $id0)
+                  ->where('department_id', $idD)
                   ->get();
-        return $cdls ->toJson();
+      return $cdls ->toJson();
 
-      return response()->
-              json([
-                      'cdls' => $cdls
-                  ]);
     }
-
-    public function infoCdl($id0, $idC)
-    {
-      $cdls = DB::table('degree_courses')
-                        ->select('idDC', 'nameDC')
-                        ->where('idDC', $idC)
-                        ->get();
-
-      return response()
-              ->json([
-                        'cdl' => $cdls
-                    ]);
-    }
-
 }

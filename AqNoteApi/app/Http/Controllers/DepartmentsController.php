@@ -22,11 +22,8 @@ class DepartmentsController extends Controller
     public function listDepart()
     {
       $departments = DB::table('departments')->select('idD', 'nameD')->get();
-        return $departments->toJson();
-      return response()->
-              json([
-                      'departments' => $departments
-                  ]);
+      return $departments->toJson();
+
     }
 
     public function infoDepart($idD)

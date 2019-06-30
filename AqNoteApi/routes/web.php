@@ -46,17 +46,25 @@ $router->delete('todo/{id}/', 'ToDoController@destroy');
 
   $router->group(['prefix' => 'department/'], function($router){
     $router->get('/', 'DepartmentsController@listDepart');
-  //  $router->get('{idD}/', 'DepartmentsController@infoDepart'); // inutile
 
-    $router->group(['prefix' => 'cdl/'], function($router){
-      $router->get('{id0}', 'CdlsController@listCdl');
-    //  $router->get('{idC}/', 'CdlsController@infoCdl');
+    $router->group(['prefix' => '{idD}/cdl/'], function($router){
+      $router->get('/', 'CdlsController@listCdl');
 
-      $router->group(['prefix' => 'year'], function($router){
-        $router->get('list', 'SubjectsController@listSubject');
-        $router->get('list/{year}', 'SubjectsController@listSubYear');
-        $router->get('{idS}/', 'SubjectsController@infoSubject');
+      $router->group(['prefix' => '{idC}/year'], function($router){
+        $router->get('/', 'SubjectsController@listSubject');
+
+        $router->group(['prefix' => '{year}/subject'], function($router){
+          $router->get('/', 'SubjectsController@listSubYear');
+
+          $router->group(['prefix' => '{idS}/notes'], function($router){
+            $router->get('/', 'SubjectsController@notesList');
+
+            $router->group(['prefix' => '{idN}'], function($router){
+              $router->get('/', 'SubjectsController@notesDetail');
+            });
+          });
+        });
       });
+    });
   });
-});
 });
