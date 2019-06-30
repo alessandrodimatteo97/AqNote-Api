@@ -42,15 +42,15 @@ $router->get('todo/', 'ToDoController@index');
 $router->get('todo/{id}/', 'ToDoController@show');
 $router->put('todo/{id}/', 'ToDoController@update');
 $router->delete('todo/{id}/', 'ToDoController@destroy');
-$router->get('{id}/', 'UsersController@infoUser');
+//$router->get('{id}/', 'UsersController@infoUser');
 
-  $router->group(['prefix' => 'department/{idD0?}'], function($router){
+  $router->group(['prefix' => 'department/'], function($router){
     $router->get('/', 'DepartmentsController@listDepart');
-    $router->get('{idD}/', 'DepartmentsController@infoDepart');
+  //  $router->get('{idD}/', 'DepartmentsController@infoDepart'); // inutile
 
     $router->group(['prefix' => 'cdl/'], function($router){
-      $router->get('', 'CdlsController@listCdl');
-      $router->get('{idC}/', 'CdlsController@infoCdl');
+      $router->get('{id0}', 'CdlsController@listCdl');
+    //  $router->get('{idC}/', 'CdlsController@infoCdl');
 
       $router->group(['prefix' => 'year'], function($router){
         $router->get('list', 'SubjectsController@listSubject');

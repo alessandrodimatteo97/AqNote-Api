@@ -25,6 +25,7 @@ class CdlsController extends Controller
                   ->select('idDC', 'nameDC', 'department_id')
                   ->where('department_id', $id0)
                   ->get();
+        return $cdls ->toJson();
 
       return response()->
               json([
