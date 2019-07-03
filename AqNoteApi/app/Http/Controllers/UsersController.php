@@ -8,13 +8,14 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Symfony\Component\HttpFoundation\Response;
-
+use cors;
 
 
 class UsersController extends Controller
 {
   public function __construct()
    {
+       $this->middleware('cors');
        $this->middleware('auth');
    }
    /**
