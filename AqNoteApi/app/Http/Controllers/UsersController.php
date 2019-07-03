@@ -101,14 +101,14 @@ class UsersController extends Controller
         ]);
 
         if(($request->input('password')) != ($request->input('repeatPassword'))){
-            return response()->json(['status' => 'Password are different'],401);
+            return response()->json('Password are different',400);
         }
 
         $hashed = Hash::make($request->input('password'));
 
-        DB::table('users')
+        $finish = DB::table('users')
             ->where('api_key', $request->header('Authorization'))
-            ->update([
+            ->update(
                         [
                             'mail' => $request->input('mail'),
                             'password' => $hashed,
@@ -116,7 +116,13 @@ class UsersController extends Controller
                             'surname' => $request->input('surname'),
                             'matriculationNumber' => $request->input('matriculationNumber')
                         ]
-                    ]);
+                    );
+
+        if($finish == 1){
+            return response()->json('Update complete', 200);
+        } else {
+            return response()->json('Server error, we cannot update', 501);
+        }
 
     }
 

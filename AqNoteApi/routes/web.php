@@ -57,7 +57,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
 Route::get('/api/davide/{idS}', function () {
     return view('prova');
 });
-
+cd
 Route::post('/davide/{idS}', 'NotesController@uploadNote');
 
 Route::get('/api/provatoken', 'UsersController@provaToken');
