@@ -31,7 +31,7 @@ class UsersController extends Controller
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
               DB::table('users')->where('mail', $request->input('mail'))->update(['api_key' => "$apikey"]);;
-              return response()->json('success', 200);
+              return response()->json('success', 200, $apikey);
           }else{
               return response()->json('fail' ,401);
           }
@@ -75,36 +75,45 @@ class UsersController extends Controller
 
     }
 
-    public function infoUser($id)
+    public function infoUser(Request $request)
     {
+      $user = DB::table('users')
+            ->select('name', 'surname', 'mail', 'matriculationNumber', 'password')
+            ->where('api_key', $request->header('Authorization'))
+            ->get();
 
-      $user = DB::table('users')->
-              select('idU', 'name', 'surname', 'mail', 'matriculationNumber', 'api_key')->
-              where('idU', $id)->
-              get();
-
-      return response()->
-              json([
-                      'user' => $user
-                  ]);
+      return response()->json( $user );
     }
 
     public function updateProfile(Request $request)
     {
         $this->validate($request, [
             'mail' => 'required',
-            'password' => 'required',
+            'oldPassword' => 'required',
+            'newPassword' => 'required',
             'repeatPassword' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'matriculationNumber' => 'required'
         ]);
 
-        if(($request->input('password')) != ($request->input('repeatPassword'))){
+        $user = DB::table('users')->where('api_key', $request->header('Authorization'))->first();
+        if(!(Hash::check($request->input('oldPassword'), $user->password)))
+        {
+            return response()->json('Old password is wrong', 401);
+        }
+
+        if(($request->input('newPassword')) != ($request->input('repeatPassword'))){
             return response()->json('Password are different',400);
         }
 
-        $hashed = Hash::make($request->input('password'));
+        $matriculation = DB::table('users')->select('matriculationNumber')->where('api_key', $request->header('Authorization'))->get();
+
+        if( $matriculation != ($request->input('matriculationNumber')) ) {
+            return response()->json('You cant change your matriculation number', 400);
+        }
+
+        $hashed = Hash::make($request->input('newPassword'));
 
         $finish = DB::table('users')
             ->where('api_key', $request->header('Authorization'))
@@ -126,9 +135,5 @@ class UsersController extends Controller
 
     }
 
-    public function provaToken(Request $request)
-    {
-        echo $request->header('Authorization');
-    }
 
 }

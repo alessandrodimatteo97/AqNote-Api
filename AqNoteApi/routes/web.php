@@ -39,7 +39,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('login/','UsersController@authenticate'); //post
   $router->post('signup/', 'UsersController@signUp'); //post
   $router->post('update/', 'UsersController@updateProfile') ; //post
-  $router->get('detailpro/{id}', 'UsersController@infoUser');
+  $router->post('infouser/', 'UsersController@infoUser'); //passareTokenInveceDiURL
   $router->get('todo/', 'TodoController@index');
   $router->get('todo/{id}/', 'ToDoController@show');
   $router->put('todo/{id}/', 'ToDoController@update');
@@ -50,14 +50,14 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
   $router->get('notesList/{idS}', 'SubjectsController@notesList');
-  $router->get('notes/{idN}', 'NotesController@notesDetail');
-  $router->get('{idS}/notes/upload', 'NotesController@uploadNote');
+  $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
+  $router->get('{idS}/notes/upload', 'NotesController@uploadNote'); //post
 });
 
 Route::get('/api/davide/{idS}', function () {
     return view('prova');
 });
-cd
+
 Route::post('/davide/{idS}', 'NotesController@uploadNote');
 
 Route::get('/api/provatoken', 'UsersController@provaToken');
