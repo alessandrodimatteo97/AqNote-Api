@@ -39,7 +39,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('login/','UsersController@authenticate'); //post
   $router->post('signup/', 'UsersController@signUp'); //post
   $router->post('update/', 'UsersController@updateProfile') ; //post
-  $router->post('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
+  $router->get('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
   $router->get('todo/', 'TodoController@index');
   $router->get('todo/{id}/', 'ToDoController@show');
   $router->put('todo/{id}/', 'ToDoController@update');

@@ -15,7 +15,7 @@ class UsersController extends Controller
 {
   public function __construct()
    {
-       //$this->middleware('cors');
+       //$this->middleware('CorsMiddleware');
        $this->middleware('auth');
    }
    /**
