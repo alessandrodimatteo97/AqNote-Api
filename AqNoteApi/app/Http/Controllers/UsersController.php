@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Auth;
+
 
 
 class UsersController extends Controller
 {
   public function __construct()
    {
-     //  $this->middleware('auth:api');
+       $this->middleware('auth');
    }
    /**
     * Display a listing of the resource.
@@ -29,9 +31,9 @@ class UsersController extends Controller
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
               DB::table('users')->where('mail', $request->input('mail'))->update(['api_key' => "$apikey"]);;
-              return response()->json(['status' => 'success','api_key' => $apikey]);
+              return response()->json('success', 200);
           }else{
-              return response()->json(['status' => 'fail'],401);
+              return response()->json('fail' ,401);
           }
     }
 
@@ -47,7 +49,7 @@ class UsersController extends Controller
        ]);
 
        if(($request->input('password')) != ($request->input('repeatPassword'))){
-         return response()->json(['status' => 'Password are different'],401);
+         return response()->json('Password are different',401);
        }
 
        $alreadyExists = DB::table('users')->
@@ -55,7 +57,7 @@ class UsersController extends Controller
                         get();
 
        if (!($alreadyExists->isEmpty())) {
-        return response()->json(['status' => 'Already exists this user'], 401);
+        return response()->json('User with this matricula already exists!', 401);
        }
 
        $hashed = Hash::make($request->input('password'));
@@ -69,7 +71,7 @@ class UsersController extends Controller
           ]
         ]);
 
-        return response()->json(['status' => 'Registration Complete'], 200);
+        return response()->json('Registration Complete', 200);
 
     }
 
@@ -77,7 +79,7 @@ class UsersController extends Controller
     {
 
       $user = DB::table('users')->
-              select('idU', 'name', 'surname', 'mail', 'matriculationNumber')->
+              select('idU', 'name', 'surname', 'mail', 'matriculationNumber', 'api_key')->
               where('idU', $id)->
               get();
 
@@ -86,4 +88,41 @@ class UsersController extends Controller
                       'user' => $user
                   ]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $this->validate($request, [
+            'mail' => 'required',
+            'password' => 'required',
+            'repeatPassword' => 'required',
+            'name' => 'required',
+            'surname' => 'required',
+            'matriculationNumber' => 'required'
+        ]);
+
+        if(($request->input('password')) != ($request->input('repeatPassword'))){
+            return response()->json(['status' => 'Password are different'],401);
+        }
+
+        $hashed = Hash::make($request->input('password'));
+
+        DB::table('users')
+            ->where('api_key', $request->header('Authorization'))
+            ->update([
+                        [
+                            'mail' => $request->input('mail'),
+                            'password' => $hashed,
+                            'name' => $request->input('name'),
+                            'surname' => $request->input('surname'),
+                            'matriculationNumber' => $request->input('matriculationNumber')
+                        ]
+                    ]);
+
+    }
+
+    public function provaToken(Request $request)
+    {
+        echo $request->header('Authorization');
+    }
+
 }

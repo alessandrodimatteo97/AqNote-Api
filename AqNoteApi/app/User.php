@@ -15,7 +15,7 @@ class Users extends Model implements Authenticatable
    * Get Todo of User
    *
    */
-   public function todo()
+   public function check()
    {
        return $this->hasMany('App\Todo','idU');
    }

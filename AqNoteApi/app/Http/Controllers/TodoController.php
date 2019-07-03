@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Todo;
 use Auth;
+
 class TodoController extends Controller
 {
     /**
@@ -22,7 +23,7 @@ class TodoController extends Controller
      */
     public function index(Request $request)
     {
-        $todo = Auth::user()->todo()->get();
+        $todo = Auth::user()->first();
         return response()->json(['status' => 'success','result' => $todo]);
     }
     /**

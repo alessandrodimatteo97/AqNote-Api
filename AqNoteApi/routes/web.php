@@ -36,10 +36,11 @@ Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
 $router->group(['prefix' => 'api/'], function ($router) {
-  $router->get('login/','UsersController@authenticate');
-  $router->get('signup/', 'UsersController@signUp');
-  $router->post('todo/','ToDoController@store');
-  $router->get('todo/', 'ToDoController@index');
+  $router->post('login/','UsersController@authenticate'); //post
+  $router->post('signup/', 'UsersController@signUp'); //post
+  $router->post('update/', 'UsersController@updateProfile') ; //post
+  $router->get('detailpro/{id}', 'UsersController@infoUser');
+  $router->get('todo/', 'TodoController@index');
   $router->get('todo/{id}/', 'ToDoController@show');
   $router->put('todo/{id}/', 'ToDoController@update');
   $router->delete('todo/{id}/', 'ToDoController@destroy');
@@ -49,5 +50,14 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
   $router->get('notesList/{idS}', 'SubjectsController@notesList');
-  $router->get('notes/{idN}', 'SubjectsController@notesDetail');
+  $router->get('notes/{idN}', 'NotesController@notesDetail');
+  $router->get('{idS}/notes/upload', 'NotesController@uploadNote');
 });
+
+Route::get('/api/davide/{idS}', function () {
+    return view('prova');
+});
+
+Route::post('/davide/{idS}', 'NotesController@uploadNote');
+
+Route::get('/api/provatoken', 'UsersController@provaToken');

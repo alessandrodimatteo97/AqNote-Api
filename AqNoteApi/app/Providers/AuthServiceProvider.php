@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Users;
+use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,15 +26,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
       $this->app['auth']->viaRequest('api', function ($request) {
-        if ($request->header('Authorization')) {
+          $valid = DB::table('users')->where('api_key', $request->header('Authorization'))->first();
+        if (!(empty($valid))) {
           $key = explode(' ',$request->header('Authorization'));
-          $user = Users::where('api_key', $key[1])->first();
-          if(!empty($user)){
-          $request->request->add(['userid' => $user->id]);
-        }
+          $user = DB::table('users')->where('api_key', $key[0])->get();
+
         return $user;
         }
         });
