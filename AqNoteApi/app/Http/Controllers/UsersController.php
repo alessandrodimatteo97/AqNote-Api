@@ -8,14 +8,14 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Symfony\Component\HttpFoundation\Response;
-use cors;
+use App\Http\Middleware\CorsMiddleware;
 
 
 class UsersController extends Controller
 {
   public function __construct()
    {
-       $this->middleware('cors');
+       //$this->middleware('cors');
        $this->middleware('auth');
    }
    /**
@@ -84,12 +84,13 @@ class UsersController extends Controller
 
     public function infoUser(Request $request)
     {
+
       $user = DB::table('users')
-            ->select('name', 'surname', 'mail', 'matriculationNumber', 'password')
+            ->select('name', 'surname', 'mail', 'matriculationNumber')
             ->where('api_key', $request->header('Authorization'))
             ->get();
 
-      return response()->json( $user );
+      return response()->json( $user , 200);
     }
 
     public function updateProfile(Request $request)
