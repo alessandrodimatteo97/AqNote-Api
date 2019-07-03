@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 
 
@@ -31,7 +32,7 @@ class UsersController extends Controller
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
               DB::table('users')->where('mail', $request->input('mail'))->update(['api_key' => "$apikey"]);;
-              return response()->json('success', 200, $apikey);
+              return response('ok' , 200)->header('Authorization', $apikey);
           }else{
               return response()->json('fail' ,401);
           }
