@@ -32,7 +32,10 @@ class UsersController extends Controller
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
               DB::table('users')->where('mail', $request->input('mail'))->update(['api_key' => "$apikey"]);;
-              return response('ok' , 200)->header('Authorization', $apikey);
+              return response()->json('ok' , 200)->withHeaders([
+                                                                          'Access-Control-Expose-Headers' => 'Authorization',
+                                                                          'Authorization' => $apikey,
+                                                                      ]);
           }else{
               return response()->json('fail' ,401);
           }
