@@ -55,7 +55,7 @@ class NotesController extends Controller
 
     public function uploadNote(Request $request, $idS)
     {
-      $idUser = DB::table('users')
+     /* $idUser = DB::table('users')
                     ->select('idU')
                     ->where('api_key', $request->input('api_key'))
                     ->get();
@@ -70,8 +70,9 @@ class NotesController extends Controller
 
        ]);
 
-      $idNote = DB::table('notes')->orderBy('idN', 'desc')->first();
-
+*/
+      //$idNote = DB::table('notes')->orderBy('idN', 'desc')->first();
+/*
       if(!(Storage::exists($idS))){
           Storage::makeDirectory($idS.'/'.$idNote->idN);
       } else{
@@ -82,14 +83,25 @@ class NotesController extends Controller
       $topass = 'image'.$index;
       while(!(empty($request->file($topass))))
       {
-          $image = $request->file($topass);
+
+        Storage::makeDirectory('prova');
+
+        $image = $request->file('');
           $namePic = $index . '.jpg';
           echo $topass;
           $image->move($pathWhereSave, $namePic);
           $index = $index + 1;
           $topass = 'image' . $index;
       }
-        return response()->json( 'data',200, 'headers');
+       */
+        if ($request->hasFile('porcodio')) {
+            $pathWhereSave = 'storage/'.$idS.'/';
+            $image = $request->file('porcodio');
+            $namePic = 'prova2.png';
+            $image->move($pathWhereSave, $namePic);
+            return response()->json('pare', 200);
+        }
+        return response()->json('Non funziona', 500);
     }
 
 

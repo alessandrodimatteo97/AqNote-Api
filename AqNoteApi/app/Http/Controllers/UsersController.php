@@ -86,7 +86,7 @@ class UsersController extends Controller
     {
 
       $user = DB::table('users')
-            ->select('name', 'surname', 'mail', 'matriculationNumber')
+            ->select('name', 'surname', 'mail', 'matriculationNumber', 'api_key')
             ->where('api_key', $request->header('Authorization'))
             ->get();
 
@@ -99,7 +99,6 @@ class UsersController extends Controller
             'mail' => 'required',
             'oldPassword' => 'required',
             'newPassword' => 'required',
-            'repeatPassword' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'matriculationNumber' => 'required'
@@ -111,9 +110,7 @@ class UsersController extends Controller
             return response()->json('Old password is wrong', 401);
         }
 
-        if(($request->input('newPassword')) != ($request->input('repeatPassword'))){
-            return response()->json('Password are different',400);
-        }
+
 
         $matriculation = DB::table('users')->select('matriculationNumber')->where('api_key', $request->header('Authorization'))->get();
 
