@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Storage;
 | and give it the Closure to call when that URI is requested.
 |
 */
-
+Route::options('/{path: *}', function(){
+    return '';
+});
+/*
 $router->get('/', function () use ($router) {
   // metodo per resituire immagini
 
@@ -31,6 +34,7 @@ $router->get('/', function () use ($router) {
   return $response;
 
 });
+*/
 
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
