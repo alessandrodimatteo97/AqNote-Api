@@ -36,6 +36,8 @@ $router->get('/', function () use ($router) {
 });
 */
 
+//Route::get('signup','UsersController@signUp');
+
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
@@ -62,3 +64,6 @@ Route::get('/api/davide/{idS}', function () {
 Route::post('/davide/{idS}', 'NotesController@uploadNote');
 
 Route::get('/api/provatoken', 'UsersController@provaToken');
+
+
+Route::get('/api/homePage', 'CdlsController@index');
