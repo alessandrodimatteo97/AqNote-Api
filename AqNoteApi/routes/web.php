@@ -36,6 +36,13 @@ $router->get('/', function () use ($router) {
 });
 */
 
+// rotta di prova per la home
+Route::get('/download', 'ExampleController@download');
+
+Route::get('homepage/{id}', 'ExampleController@homePage');
+
+
+
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
