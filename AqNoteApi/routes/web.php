@@ -39,20 +39,22 @@ $router->get('/', function () use ($router) {
 // rotta di prova per la home
 Route::get('/download', 'ExampleController@download');
 
-Route::get('homepage/{id}', 'ExampleController@homePage');
 
 
 
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
+
 $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('login/','UsersController@authenticate'); //post
   $router->post('signup/', 'UsersController@signUp'); //post
   $router->post('update/', 'UsersController@updateProfile') ; //post
   $router->get('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
 
-  //$router->get('{id}/', 'UsersController@infoUser');
+    $router->get('homepage/{id}', 'ExampleController@homePage');
+
+    //$router->get('{id}/', 'UsersController@infoUser');
   $router->get('department/', 'DepartmentsController@listDepart');
   $router->get('cdl/{idD}', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
