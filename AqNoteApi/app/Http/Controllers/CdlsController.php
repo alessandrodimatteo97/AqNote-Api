@@ -80,11 +80,10 @@ class CdlsController extends Controller
         return $subjectAndBestNotes->toJson();
     }
 
-    public function listCdl($idD)
+    public function listCdl()
     {
       $cdls = DB::table('degree_courses')
-                  ->select('idDC', 'nameDC', 'department_id')
-                  ->where('department_id', $idD)
+                  ->select('idDC', 'nameDC')
                   ->get();
       return $cdls ->toJson();
 

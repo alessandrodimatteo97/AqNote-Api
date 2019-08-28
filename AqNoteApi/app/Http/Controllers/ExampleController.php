@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -61,10 +62,11 @@ SELECT *
         $type = 'image/jpg';
         $headers = ['Content-Type' => $type];
         $path=storage_path('pr.jpeg');
+        $image = new Image();
+        $image = $file;
         $response = new BinaryFileResponse($file, 200 , $headers);
-
-        return $response;
-
+        //return $response;
+        return $image;
     }
 
 }

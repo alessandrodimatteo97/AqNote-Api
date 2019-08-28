@@ -29,7 +29,7 @@ class UsersController extends Controller
        'mail' => 'required',
        'password' => 'required'
         ]);
-       echo 'diocan';
+
       $user = DB::table('users')->where('mail', $request->input('mail'))->first();
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
