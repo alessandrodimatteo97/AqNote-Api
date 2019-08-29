@@ -42,6 +42,7 @@ Route::get('/download', 'ExampleController@download');
 
 
 
+
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
@@ -53,7 +54,9 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
 
     $router->get('homepage/{id}', 'ExampleController@homePage');
+    Route::get('/favourites', 'ExampleController@favouriteNote');
 
+    //nameSFavourites
     //$router->get('{id}/', 'UsersController@infoUser');
   $router->get('department/', 'DepartmentsController@listDepart');
   $router->get('cdl/{idD}', 'CdlsController@listCdl');
