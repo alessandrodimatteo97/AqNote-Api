@@ -51,15 +51,12 @@ class ExampleController extends Controller
     function download()
     {
 
-        $file = "../public/storage/1/13/1-.jpg";
+        $file = "../public/storage/1/13/1-.png";
         //$file = new Array_("../public/storage/1/13/1-.jpg");
         //$file->
-        $type = 'image/jpg';
-        $headers = ['Content-Type' => $type];
-        $path = storage_path('pr.jpeg');
-        $response = new BinaryFileResponse($file, 200, $headers);
 
-        return $response;
+       return $image = base64_encode(file_get_contents($file));
+
 
 
     }
