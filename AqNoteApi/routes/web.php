@@ -37,7 +37,7 @@ $router->get('/', function () use ($router) {
 */
 
 // rotta di prova per la home
-Route::get('/download', 'ExampleController@download');
+Route::get('/api/download', 'ExampleController@download');
 
 
 
@@ -59,7 +59,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
     //nameSFavourites
     //$router->get('{id}/', 'UsersController@infoUser');
   $router->get('department/', 'DepartmentsController@listDepart');
-  $router->get('cdl/{idD}', 'CdlsController@listCdl');
+  $router->get('cdl/', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
   $router->get('notesList/{idS}', 'SubjectsController@notesList');

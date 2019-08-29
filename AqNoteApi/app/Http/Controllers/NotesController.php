@@ -47,7 +47,8 @@ class NotesController extends Controller
           $arrayImg[$indiceImg] = $path;
           $indiceImg = $indiceImg + 1;
       }
-        return $arrayImg;
+      return "ciqoooaishidubfn";
+        return "$arrayImg";
 
         //return $note->toJson();
 

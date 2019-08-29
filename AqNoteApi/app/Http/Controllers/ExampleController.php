@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExampleController extends Controller
@@ -58,6 +60,7 @@ class ExampleController extends Controller
         $response = new BinaryFileResponse($file, 200, $headers);
 
         return $response;
+
 
     }
 

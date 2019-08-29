@@ -16,7 +16,7 @@ class UsersController extends Controller
   public function __construct()
    {
        //$this->middleware('CorsMiddleware');
-     //  $this->middleware('auth');
+     //
    }
    /**
     * Display a listing of the resource.
@@ -29,6 +29,7 @@ class UsersController extends Controller
        'mail' => 'required',
        'password' => 'required'
         ]);
+
       $user = DB::table('users')->where('mail', $request->input('mail'))->first();
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
@@ -46,39 +47,51 @@ class UsersController extends Controller
 
     public function signUp (Request $request)
     {
-      $this->validate($request, [
-      'mail' => 'required',
+    $this->validate($request, [
+      'email' => 'required',
       'password' => 'required',
       'repeatPassword' => 'required',
       'name' => 'required',
       'surname' => 'required',
-      'matriculationNumber' => 'required'
+      'cdl' => 'required',
        ]);
+
+
+        $id_cdl = DB::table('degree_courses')
+                        ->select('idDC')
+                        ->where('nameDC', '=', $request->input('cdl'))
+                        ->pluck('idDC');
 
        if(($request->input('password')) != ($request->input('repeatPassword'))){
          return response()->json('Password are different',401);
        }
 
-       $alreadyExists = DB::table('users')->
-                        where('matriculationNumber', '=', $request->input('matriculationNumber'))->
-                        get();
+       $userExists = DB::table('users')
+                        ->select('mail')
+                        ->where('mail', '=', $request->input('email'))
+                        ->pluck('mail');
 
-       if (!($alreadyExists->isEmpty())) {
-        return response()->json('User with this matricula already exists!', 401);
+       if($userExists == null){
+           return response()->json('UserExists Already',411);
        }
 
        $hashed = Hash::make($request->input('password'));
 
        DB::table('users')->insert([
-          ['mail' => $request->input('mail'),
+          [
+           'mail' => $request->input('email'),
            'password' => $hashed,
            'name' => $request->input('name'),
            'surname' => $request->input('surname'),
-           'matriculationNumber' => $request->input('matriculationNumber')
+           'cdl_id' => $id_cdl[0]
           ]
         ]);
-
-        return response()->json('Registration Complete', 200);
+        echo  $request->input('email');
+        echo  $hashed;
+           echo  $request->input('name');
+          echo  $request->input('surname');
+          echo  $id_cdl[0];
+        //return response()->json('Registration Complete', 200);
 
     }
 
@@ -86,7 +99,7 @@ class UsersController extends Controller
     {
 
       $user = DB::table('users')
-            ->select('name', 'surname', 'mail', 'matriculationNumber', 'api_key')
+            ->select('name', 'surname', 'mail', 'password','matriculationNumber',  'cdl_id')
             ->where('api_key', $request->header('Authorization'))
             ->get();
 
