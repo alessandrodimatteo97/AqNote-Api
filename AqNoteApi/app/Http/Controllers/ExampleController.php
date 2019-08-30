@@ -67,7 +67,7 @@ class ExampleController extends Controller
         foreach ($paths as $path) {
             $collection->put($path->idP, base64_encode(file_get_contents($path->path)));
         }
-        return $collection;
+        return $collection->toArray();
         /*
         while (!($query->isEmpty()))
         {
