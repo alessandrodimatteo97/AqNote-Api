@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use http\Env\Response;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ExampleController extends Controller
 {   // funzione per la home page, da aggiungere ancora la distinzione 1,2,3 anno
@@ -54,9 +56,27 @@ class ExampleController extends Controller
         $file = "../public/storage/1/13/1-.png";
         //$file = new Array_("../public/storage/1/13/1-.jpg");
         //$file->
+        $index = 0;
+        $collection = collect([]);
+        $paths = DB::table('photos')
+                    ->select('idP', 'path')
+                    ->where('note_id', '=', '1')
+                    ->get();
 
-       return $image = base64_encode(file_get_contents($file));
 
+        foreach ($paths as $path) {
+            $collection->put($path->idP, base64_encode(file_get_contents($path->path)));
+        }
+        return $collection;
+        /*
+        while (!($query->isEmpty()))
+        {
+            $data = filter_var($query[], FILTER_SANITIZE_STRING);
+            $collection->put($index, base64_encode(file_get_contents($img)));
+            $index = $index + 1;
+        }
+*/
+        //return $image = base64_encode(file_get_contents($file));
 
 
     }
