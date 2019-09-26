@@ -37,7 +37,7 @@ $router->get('/', function () use ($router) {
 */
 
 // rotta di prova per la home
-Route::get('/api/download', 'ExampleController@download');
+Route::get('/api/download/{idN}', 'ExampleController@download');
 
 
 

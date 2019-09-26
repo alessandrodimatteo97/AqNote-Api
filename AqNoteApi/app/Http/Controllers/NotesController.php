@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use http\Env\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\User;
@@ -56,53 +57,67 @@ class NotesController extends Controller
 
     public function uploadNote(Request $request, $idS)
     {
-     /* $idUser = DB::table('users')
-                    ->select('idU')
-                    ->where('api_key', $request->input('api_key'))
-                    ->get();
+        if(($request->header('note_id')) == 'null')
+        {
+            $idNote = DB::table('notes')->insert([
+                [
+                    'title' => $request->input('title'),
+                    'description' => $request->input('descr'),
+                    'user_id' => 7,
+                    'subject_id' => $idS
+                ]
+            ]);
 
-      DB::table('notes')->insert([
-         [
-          'title' => $request->input('title'),
-          'description' => $request->input('description'),
-          'user_id' => 1,
-          'subject_id' => $idS,
-         ]
+          //  echo response()->json('id nota generato', $idNote->idN);
 
-       ]);
-
-*/
-      //$idNote = DB::table('notes')->orderBy('idN', 'desc')->first();
-/*
-      if(!(Storage::exists($idS))){
-          Storage::makeDirectory($idS.'/'.$idNote->idN);
-      } else{
-          Storage::makeDirectory($idS.'/'.$idNote->idN);
-      }
-      $pathWhereSave = 'storage/'.$idS.'/'.$idNote->idN;
-      $index = 0;
-      $topass = 'image'.$index;
-      while(!(empty($request->file($topass))))
-      {
-
-        Storage::makeDirectory('prova');
-
-        $image = $request->file('');
-          $namePic = $index . '.jpg';
-          echo $topass;
-          $image->move($pathWhereSave, $namePic);
-          $index = $index + 1;
-          $topass = 'image' . $index;
-      }
-       */
-        if ($request->hasFile('porcodio')) {
-            $pathWhereSave = 'storage/'.$idS.'/';
-            $image = $request->file('porcodio');
-            $namePic = 'prova2.png';
-            $image->move($pathWhereSave, $namePic);
-            return response()->json('pare', 200);
         }
-        return response()->json('Non funziona', 500);
+
+        $idNote = DB::table('notes')
+            ->orderBy('idN', 'desc')
+            ->first();
+
+
+        if(!(Storage::exists($idS))){
+            Storage::makeDirectory($idS.'/'.$idNote->idN);
+        } else{
+            Storage::makeDirectory($idS.'/'.$idNote->idN);
+        }
+
+        $iduser = DB::table('users')
+                    ->select('idU')
+                    ->where('api_key', '=', $request->header('X-Auth'))
+                    ->pluck('idU');
+
+        if ($request->hasAny('file'))
+        {
+            $namePic ='ciao.jpeg';
+            $pathWhereSave = 'public/storage/'.$idS.'/'.$idNote->idN;
+            $image = $request->file('file')->storeAs('files', $namePic);
+            // Storage::putFile($pathWhereSave, $image);
+            //$imageFinal = file_get_contents($image);
+           // file_put_contents('~/Scrivania/universita/terzoanno/secondosemestre/progettoDiSalle/AqNote-Api/AqNoteApi/public/storage/nuovofile.jpg',  $request->file('file'));
+            //$image->move($pathWhereSave, $namePic);
+
+            DB::table('photos')->insert([
+                [
+                    'path' => '../public/'.$pathWhereSave.'/'.$namePic,
+                    'nameP' => $namePic,
+                    'note_id' => $idNote->idN
+                ]
+            ]);
+            return response()->json(['OK' => 200, 'note_id' => $idNote->idN]);
+
+            /*return response()->json('OK', 200, [
+                'Content-Type' => 'application/json',
+                'note-id'=> $idNote->idN,
+                'Per-capi' => 'madonne',
+            ]);*/
+
+        } else {
+            return response()->json('Internal Server Error', 555)
+                    ->header('Content-Type', 'application/json');
+        }
+
     }
 
 

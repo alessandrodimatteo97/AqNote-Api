@@ -22,10 +22,12 @@ require_once __DIR__.'/../vendor/autoload.php';
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
-
- $app->withFacades();
- $app->withEloquent();
- $app->register(App\Providers\AppServiceProvider::class);
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: *');
+header('Access-Control-Allow-Headers: *');
+$app->withFacades();
+$app->withEloquent();
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\CorsMiddleware::class,

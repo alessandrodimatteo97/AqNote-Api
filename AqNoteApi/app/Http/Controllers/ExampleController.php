@@ -50,24 +50,24 @@ class ExampleController extends Controller
                                                 )  t1  join (SELECT  note_id as idN,count(note_id) FROM  AqNoteApi.photos join  notes n on n.idN = photos.idP group by note_id)  t2
                                                  on t1.idN = t2.idN
      */
-    function download()
+    function download($idN)
     {
 
-        $file = "../public/storage/1/13/1-.png";
+        //$file = "../public/storage/1/13/1-.png";
         //$file = new Array_("../public/storage/1/13/1-.jpg");
         //$file->
-        $index = 0;
+
         $collection = collect([]);
         $paths = DB::table('photos')
                     ->select('idP', 'path')
-                    ->where('note_id', '=', '1')
+                    ->where('note_id', '=', $idN)
                     ->get();
 
 
         foreach ($paths as $path) {
-            $collection->put($path->idP, base64_encode(file_get_contents($path->path)));
+            $collection->put($path->idP, 'data:image/jpg;base64, '.base64_encode(file_get_contents($path->path)));
         }
-        return $collection->toArray();
+        return response()->json($collection, 200);
         /*
         while (!($query->isEmpty()))
         {
