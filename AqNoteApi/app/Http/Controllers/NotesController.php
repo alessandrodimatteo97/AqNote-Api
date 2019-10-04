@@ -1,18 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
-use http\Env\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\ServiceProvider;
-use App\Todo;
 use Auth;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use File;
 
 class NotesController extends Controller
@@ -55,7 +49,20 @@ class NotesController extends Controller
 
     }
 
-    public function uploadNote(Request $request, $idS)
+    public function uploadNote(Request $request){
+        $userId = DB::table('users')->select('idU')->where('api_key', '=',$request->header('Authorization') )->value('idU');
+     //   return response()->json(['OK' => 200, 'userId' => $userId]);
+        $data = array(
+            'title'  =>  $request->input('title') ,
+            'description'  =>  $request->input('description') ,
+            'user_id' => $userId, // prendere l'id dal login e salvarlo
+            'subject_id' => $request->input('subject_id')
+        );
+        $idNote = DB::table('notes')->insertGetId($data);
+        return $idNote;
+    }
+
+    public function uploadPhoto(Request $request, $idS)
     {
         if(($request->header('note_id')) == 'null')
         {

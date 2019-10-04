@@ -34,7 +34,8 @@ class UsersController extends Controller
          if(Hash::check($request->input('password'), $user->password)){
               $apikey = base64_encode(str_random(40));
               DB::table('users')->where('mail', $request->input('mail'))->update(['api_key' => "$apikey"]);;
-              return response()->json($user , 200 )->withHeaders([
+
+             return response()->json($user , 200 )->withHeaders([
                                                                           'Access-Control-Expose-Headers' => 'Authorization',
                                                                           'Authorization' => $apikey,
                                                                           //'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',

@@ -64,7 +64,8 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
   $router->get('notesList/{idS}', 'SubjectsController@notesList');
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
-  $router->post('{idS}/notes/upload', 'NotesController@uploadNote'); //post
+  $router->post('notes/upload/', 'NotesController@uploadNote');
+  $router->post('photos/upload/', 'NotesController@uploadPhoto');
 });
 
 Route::get('/api/davide/{idS}', function () {
