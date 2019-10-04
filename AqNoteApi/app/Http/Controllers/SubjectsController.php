@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\User;
+use App\Model\User;
 use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use App\Todo;
 use Auth;
+use App\Model\Note;
 
 class SubjectsController extends Controller
 {
@@ -56,19 +58,27 @@ class SubjectsController extends Controller
                   ->where('year', $year)
                   ->get();
 
-      return $subjects->toJson();
+      return $subjects->json(['OK' => 200, 'note_id' => $subjects]);
     }
 
     public function notesList($idS)
     {
+        $hello = DB::select(DB::raw(" SELECT *
+        FROM (SELECT u.name, u.surname, n.idN, n.title, n.description ,count(distinctrow c.idCO) as comments,avg(c.like)-1 as avarage from notes as n left join comments as c on n.idN=c.note_id 
+        join users as u on u.idU = n.user_id join photos as p on n.idN = p.note_id where n.subject_id ='$idS' group by n.idN order by n.idN 
+        )  t1  join (SELECT  n.idN,count(p.note_id) as pages FROM  photos as p left join  notes as n on n.idN = p.note_id where p.note_id is null or p.note_id is not null group by p.note_id) t2  on t1.idN = t2.idN ;"));
 
-      $notesList = DB::table('notes')
-                  ->select('idN', 'title', 'description', 'user_id', 'subject_id')
-                  ->where('subject_id', $idS)
-                  ->get();
-      return $notesList->toJson();
-
+        return $hello;
     }
+
+
+    /*foreach($notesListPhotos as $notesListPhoto) {
+        foreach ($notesListComments as $notesListComment) {
+            $results = $notesListComment->add($notesListPhoto)->where($notesListComments->get('idN'), '=', $notesListPhoto->idN);
+        }
+    }
+*/
+
 
     public function uploadNote(Request $request, $idS)
     {

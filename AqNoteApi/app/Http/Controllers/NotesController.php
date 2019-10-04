@@ -90,13 +90,16 @@ class NotesController extends Controller
 
         if ($request->hasAny('file'))
         {
-            $namePic ='ciao.jpeg';
+            $namePic ='ciao';
             $pathWhereSave = 'public/storage/'.$idS.'/'.$idNote->idN;
-            $image = $request->file('file')->storeAs('files', $namePic);
+            $imageB64 = $request->input('file');
+            $imagePure = base64_decode($imageB64);
+
+
             // Storage::putFile($pathWhereSave, $image);
             //$imageFinal = file_get_contents($image);
            // file_put_contents('~/Scrivania/universita/terzoanno/secondosemestre/progettoDiSalle/AqNote-Api/AqNoteApi/public/storage/nuovofile.jpg',  $request->file('file'));
-            //$image->move($pathWhereSave, $namePic);
+            $imagePure->move($pathWhereSave, $namePic);
 
             DB::table('photos')->insert([
                 [
@@ -119,6 +122,12 @@ class NotesController extends Controller
         }
 
     }
+
+    public function uploadComment(Request $request, $idN)
+    {
+        echo response()->json($request->toArray(), 200);
+    }
+
 
 
 }

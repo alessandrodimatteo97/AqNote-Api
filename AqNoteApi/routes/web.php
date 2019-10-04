@@ -40,7 +40,7 @@ $router->get('/', function () use ($router) {
 Route::get('/api/download/{idN}', 'ExampleController@download');
 
 
-
+Route::get('/api/cazzarola', 'UsersController@prova200');
 
 
 Route::get('/api/Departments', 'Controller@DepartmentsList');
@@ -65,6 +65,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('notesList/{idS}', 'SubjectsController@notesList');
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
   $router->post('{idS}/notes/upload', 'NotesController@uploadNote'); //post
+  $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
 });
 
 Route::get('/api/davide/{idS}', function () {

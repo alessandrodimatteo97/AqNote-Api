@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Model\Note;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\User;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Middleware\CorsMiddleware;
-
+use Illuminate\Database\Eloquent;
+use Illuminate\Database\Eloquent\Model;
+use App\Model\User;
+use App\Model\Cdl;
+use App\Model\Subject;
 
 class UsersController extends Controller
 {
@@ -150,6 +155,11 @@ class UsersController extends Controller
         } else {
             return response()->json('Server error, we cannot update', 501);
         }
+
+    }
+
+    public function prova200()
+    {
 
     }
 
