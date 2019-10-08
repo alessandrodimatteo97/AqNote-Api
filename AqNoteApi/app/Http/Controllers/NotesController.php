@@ -50,22 +50,29 @@ class NotesController extends Controller
           //return $note->toJson();
           */
     }
-
+    // uploadNote deve prendere anche l'id della materia
     public function uploadNote(Request $request){
         $userId = DB::table('users')->select('idU')->where('api_key', '=',$request->header('Authorization') )->value('idU');
      //   return response()->json(['OK' => 200, 'userId' => $userId]);
+        $idS = $request->input('subject_id');
+
         $data = array(
             'title'  =>  $request->input('title') ,
             'description'  =>  $request->input('description') ,
             'user_id' => $userId, // prendere l'id dal login e salvarlo
-            'subject_id' => $request->input('subject_id')
+            'subject_id' => $idS
         );
         $idNote = DB::table('notes')->insertGetId($data);
+
         return $idNote;
     }
 
-    public function uploadPhoto(Request $request, $idS)
+    public function uploadPhoto(Request $request)
     {
+        $idN = $request->input('idN') ;
+        $idS= $request->input('idS') ;
+
+        /*
         if(($request->header('note_id')) == 'null')
         {
             $idNote = DB::table('notes')->insert([
@@ -91,33 +98,34 @@ class NotesController extends Controller
         } else{
             Storage::makeDirectory($idS.'/'.$idNote->idN);
         }
+*/
+       // $iduser = DB::table('users')->select('idU')->where('api_key', '=',$request->header('Authorization') )->value('idU');
 
-        $iduser = DB::table('users')
-                    ->select('idU')
-                    ->where('api_key', '=', $request->header('X-Auth'))
-                    ->pluck('idU');
 
-        if ($request->hasAny('file'))
+        if ($request->hasFile('file'))
         {
-            $namePic ='ciao';
-            $pathWhereSave = 'public/storage/'.$idS.'/'.$idNote->idN;
-            $imageB64 = $request->input('file');
-            $imagePure = base64_decode($imageB64);
 
+            $namePic = $request->file('file')->getClientOriginalName();
+          //  return $request->file();
+          //  return response()->json($request->file('file'));
+            $pathWhereSave = '../public/storage/'. $idS.'/'.$idN;
+            $imageB64 = $request->file('file');
+         //   $imagePure = base64_decode($imageB64);
 
-            // Storage::putFile($pathWhereSave, $image);
+         //   Storage::disk('public')->put('storage/'. $idS.'/'.$idN, $imageB64);
+           //  Storage::putFile($pathWhereSave, $imageB64);
             //$imageFinal = file_get_contents($image);
            // file_put_contents('~/Scrivania/universita/terzoanno/secondosemestre/progettoDiSalle/AqNote-Api/AqNoteApi/public/storage/nuovofile.jpg',  $request->file('file'));
-            $imagePure->move($pathWhereSave, $namePic);
+            $imageB64->move($pathWhereSave, $namePic);
 
             DB::table('photos')->insert([
                 [
-                    'path' => '../public/'.$pathWhereSave.'/'.$namePic,
+                    'path' => $pathWhereSave.'/'.$namePic,
                     'nameP' => $namePic,
-                    'note_id' => $idNote->idN
+                    'note_id' => $idN
                 ]
             ]);
-            return response()->json(['OK' => 200, 'note_id' => $idNote->idN]);
+            return response()->json(['OK' => 200, 'note_id' => $idN]);
 
             /*return response()->json('OK', 200, [
                 'Content-Type' => 'application/json',
@@ -137,6 +145,25 @@ class NotesController extends Controller
         echo response()->json($request->toArray(), 200);
     }
 
+    public function uploadNote1(Request $request){
+return $request->file('file')->get();
+        if ($request->hasAny('file')) {
+            $destinationPath = 'storage/app/23/153/';
+            $files = $request->file('file'); // will get all files
+
+            foreach ($files as $file) {//this statement will loop through all files.
+                $file_name = $file->getClientOriginalName(); //Get file original name
+                return $file_name;
+                $file->move($destinationPath , $file_name); // move files to destination folder
+            }
+        }
+        return "prova";
 
 
-}
+
+    }
+    }
+
+
+
+
