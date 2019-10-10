@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use Auth;
-use Intervention\Image\File;
+use File;
 
 class NotesController extends Controller
 {
@@ -24,30 +23,32 @@ class NotesController extends Controller
 
     public function notesDetail($idN)
     {
-      /*
-      $contents = Storage::get('/public/storage/dirKKK/image1-.jpg');
+
+      // $contents = Storage::get('/public/storage/dirKKK/image1-.jpg');
       $note = DB::table('notes')
-                  ->select('idN', 'title', 'description', 'user_id', 'subject_id')
+                  ->select( 'title', 'description', 'user_id', 'subject_id')
                   ->where('idN', $idN)
                   ->get();
+      return response()->json($note, '200');
 
-      $pathToDetail = $note[0].'-'.$note[3].'-'.$note[4];
-*///echo Storage::get('/');
+              //$pathToDetail = $note[0].'-'.$note[3].'-'.$note[4];
+        //echo Storage::get('/');
       /*$type = 'image/jpg';
       $headers = ['Content-Type' => $type];*/
-      $indiceImg = 0;
-      $arrayImg = [];
-      if(file_exists(storage_path('../public/storage/11/174/foto1.jpg'))) {
-          $path = '../public/storage/11/174/foto1.jpg'; //questo è il path buono usando url poi nel templateengine
-          //$path = storage_path('../public/storage/dirKKK/image' . $indiceImg . '-.jpg'); //Con questo prendo il path completo
-          $arrayImg[$indiceImg] = $path;
-          $indiceImg = $indiceImg + 1;
-      }
-      //return "ciqoooaishidubfn";
-        return $arrayImg;
+        /*
+        $indiceImg = 0;
+        $arrayImg = [];
+        while(file_exists(storage_path('../public/storage/dirKKK/image'.$indiceImg.'-.jpg'))) {
+            $path = 'storage/dirKKK/image' . $indiceImg . '-.jpg'; //questo è il path buono usando url poi nel templateengine
+            //$path = storage_path('../public/storage/dirKKK/image' . $indiceImg . '-.jpg'); //Con questo prendo il path completo
+            $arrayImg[$indiceImg] = $path;
+            $indiceImg = $indiceImg + 1;
+        }
+        return "ciqoooaishidubfn";
+          return "$arrayImg";
 
-        //return $note->toJson();
-
+          //return $note->toJson();
+          */
     }
     // uploadNote deve prendere anche l'id della materia
     public function uploadNote(Request $request){
