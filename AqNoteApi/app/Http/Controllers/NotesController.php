@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use Auth;
-use File;
+use Intervention\Image\File;
 
 class NotesController extends Controller
 {
@@ -36,14 +37,14 @@ class NotesController extends Controller
       $headers = ['Content-Type' => $type];*/
       $indiceImg = 0;
       $arrayImg = [];
-      while(file_exists(storage_path('../public/storage/dirKKK/image'.$indiceImg.'-.jpg'))) {
-          $path = 'storage/dirKKK/image' . $indiceImg . '-.jpg'; //questo è il path buono usando url poi nel templateengine
+      if(file_exists(storage_path('../public/storage/11/174/foto1.jpg'))) {
+          $path = '../public/storage/11/174/foto1.jpg'; //questo è il path buono usando url poi nel templateengine
           //$path = storage_path('../public/storage/dirKKK/image' . $indiceImg . '-.jpg'); //Con questo prendo il path completo
           $arrayImg[$indiceImg] = $path;
           $indiceImg = $indiceImg + 1;
       }
-      return "ciqoooaishidubfn";
-        return "$arrayImg";
+      //return "ciqoooaishidubfn";
+        return $arrayImg;
 
         //return $note->toJson();
 
@@ -136,6 +137,18 @@ class NotesController extends Controller
                     ->header('Content-Type', 'application/json');
         }
 
+    }
+
+
+    public function deletePhoto(Request $request){
+        $idN = $request->input('idN');
+        $imageName = $request->input('imageName');
+     $query = DB::table('photos')->where('note_id', '=', $idN)->where('nameP', '=', $imageName)->select('idP', 'path')->first();
+            DB::table('photos')->where('idP', '=', $query->idP)->delete();
+         if (unlink($query->path)){
+             return response()->json('Removed photo', 200);
+         };
+         return response()->json('Error', 500);
     }
 
     public function uploadComment(Request $request, $idN)

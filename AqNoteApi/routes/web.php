@@ -66,6 +66,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
   $router->post('notes/upload/', 'NotesController@uploadNote');
   $router->post('photos/upload', 'NotesController@uploadPhoto');
+  $router->post('photos/delete', 'NotesController@deletePhoto');
  // $router->post('/notes/upload/{idS}/{idN}', 'NotesController@uploadNote'); //post
   $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
 });
