@@ -56,6 +56,9 @@ $router->group(['prefix' => 'api/'], function ($router) {
 
     $router->get('homepage/{id}', 'ExampleController@homePage');
     Route::get('/favourites', 'ExampleController@favouriteNote');
+
+    //nameSFavourites
+    //$router->get('{id}/', 'UsersController@infoUser');
   $router->get('department/', 'DepartmentsController@listDepart');
   $router->get('cdl/', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
@@ -68,6 +71,9 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('/check-commented/{idN}', 'NotesController@checkCommentedNote'); //post
   // $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
   $router->get('notes-comments/{idN}', 'NotesController@loadComments');
+  $router->post('photos/delete', 'NotesController@deletePhoto');
+ // $router->post('/notes/upload/{idS}/{idN}', 'NotesController@uploadNote'); //post
+  $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
 });
 
 Route::get('/api/davide/{idS}', function () {
