@@ -52,22 +52,22 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('signup/', 'UsersController@signUp'); //post
   $router->post('update/', 'UsersController@updateProfile') ; //post
   $router->get('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
+    $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
     $router->get('homepage/{id}', 'ExampleController@homePage');
     Route::get('/favourites', 'ExampleController@favouriteNote');
-
-    //nameSFavourites
-    //$router->get('{id}/', 'UsersController@infoUser');
   $router->get('department/', 'DepartmentsController@listDepart');
   $router->get('cdl/', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
   $router->get('notesList/{idS}', 'SubjectsController@notesList');
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
+  $router->post('notes-photos/{idN}', 'NotesController@loadPhoto');
   $router->post('notes/upload/', 'NotesController@uploadNote');
   $router->post('photos/upload', 'NotesController@uploadPhoto');
- // $router->post('/notes/upload/{idS}/{idN}', 'NotesController@uploadNote'); //post
-  $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
+  $router->get('/check-commented/{idN}', 'NotesController@checkCommentedNote'); //post
+  // $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
+  $router->get('notes-comments/{idN}', 'NotesController@loadComments');
 });
 
 Route::get('/api/davide/{idS}', function () {
