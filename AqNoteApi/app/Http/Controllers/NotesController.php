@@ -142,14 +142,26 @@ class NotesController extends Controller
 
 
     public function deletePhoto(Request $request){
-        $idN = $request->input('idN');
-        $imageName = $request->input('imageName');
-     $query = DB::table('photos')->where('note_id', '=', $idN)->where('nameP', '=', $imageName)->select('idP', 'path')->first();
+
+        if(($request->has('idP'))) {
+            $query = DB::table('photos')->where('idP', '=', $request->input('idP'))->select('path')->first();
+            DB::table('photos')->where('idP', '=',  $request->input('idP') )->delete();
+
+            if (unlink($query->path)) {
+                return response()->json('Removed photo', 200);
+            };
+        }
+        else {
+            $idN = $request->input('idN');
+            $imageName = $request->input('imageName');
+            $query = DB::table('photos')->where('note_id', '=', $idN)->where('nameP', '=', $imageName)->select('idP', 'path')->first();
             DB::table('photos')->where('idP', '=', $query->idP)->delete();
-         if (unlink($query->path)){
-             return response()->json('Removed photo', 200);
-         };
-         return response()->json('Error', 500);
+            if (unlink($query->path)) {
+                return response()->json('Removed photo', 200);
+            };
+            return response()->json('Error', 500);
+        }
+        return response()->json('Error', 500);
     }
 
     public function uploadComment(Request $request, $idN)
@@ -157,23 +169,6 @@ class NotesController extends Controller
         echo response()->json($request->toArray(), 200);
     }
 
-    public function uploadNote1(Request $request){
-return $request->file('file')->get();
-        if ($request->hasAny('file')) {
-            $destinationPath = 'storage/app/23/153/';
-            $files = $request->file('file'); // will get all files
-
-            foreach ($files as $file) {//this statement will loop through all files.
-                $file_name = $file->getClientOriginalName(); //Get file original name
-                return $file_name;
-                $file->move($destinationPath , $file_name); // move files to destination folder
-            }
-        }
-        return "prova";
-
-
-
-    }
     }
 
 
