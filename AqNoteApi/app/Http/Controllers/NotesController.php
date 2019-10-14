@@ -72,50 +72,15 @@ class NotesController extends Controller
         $idN = $request->input('idN') ;
         $idS= $request->input('idS') ;
 
-        /*
-        if(($request->header('note_id')) == 'null')
-        {
-            $idNote = DB::table('notes')->insert([
-                [
-                    'title' => $request->input('title'),
-                    'description' => $request->input('descr'),
-                    'user_id' => 7,
-                    'subject_id' => $idS
-                ]
-            ]);
-
-          //  echo response()->json('id nota generato', $idNote->idN);
-
-        }
-
-        $idNote = DB::table('notes')
-            ->orderBy('idN', 'desc')
-            ->first();
-
-
-        if(!(Storage::exists($idS))){
-            Storage::makeDirectory($idS.'/'.$idNote->idN);
-        } else{
-            Storage::makeDirectory($idS.'/'.$idNote->idN);
-        }
-*/
-       // $iduser = DB::table('users')->select('idU')->where('api_key', '=',$request->header('Authorization') )->value('idU');
 
 
         if ($request->hasFile('file'))
         {
 
             $namePic = $request->file('file')->getClientOriginalName();
-          //  return $request->file();
-          //  return response()->json($request->file('file'));
+
             $pathWhereSave = '../public/storage/'. $idS.'/'.$idN;
             $imageB64 = $request->file('file');
-         //   $imagePure = base64_decode($imageB64);
-
-         //   Storage::disk('public')->put('storage/'. $idS.'/'.$idN, $imageB64);
-           //  Storage::putFile($pathWhereSave, $imageB64);
-            //$imageFinal = file_get_contents($image);
-           // file_put_contents('~/Scrivania/universita/terzoanno/secondosemestre/progettoDiSalle/AqNote-Api/AqNoteApi/public/storage/nuovofile.jpg',  $request->file('file'));
             $imageB64->move($pathWhereSave, $namePic);
 
             DB::table('photos')->insert([
@@ -127,11 +92,6 @@ class NotesController extends Controller
             ]);
             return response()->json(['OK' => 200, 'note_id' => $idN]);
 
-            /*return response()->json('OK', 200, [
-                'Content-Type' => 'application/json',
-                'note-id'=> $idNote->idN,
-                'Per-capi' => 'madonne',
-            ]);*/
 
         } else {
             return response()->json('Internal Server Error', 555)
@@ -159,7 +119,6 @@ class NotesController extends Controller
             if (unlink($query->path)) {
                 return response()->json('Removed photo', 200);
             };
-            return response()->json('Error', 500);
         }
         return response()->json('Error', 500);
     }
