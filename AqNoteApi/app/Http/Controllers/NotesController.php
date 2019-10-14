@@ -125,10 +125,75 @@ class NotesController extends Controller
 
     public function uploadComment(Request $request, $idN)
     {
-        echo response()->json($request->toArray(), 200);
+        $user = DB::table('users')
+            ->select('idU')
+            ->where('api_key', $request->header('Authorization'))
+            ->pluck('idU');
+
+        DB::table('comments')->insert([
+            'titleC' => 'Prova',
+            'text' => $request->input('comment'),
+            'like' => $request->input('stars'),
+            'user_id' => $user[0],
+            'note_id' => $idN
+        ]);
+
+        return $user;
     }
 
+    public function loadComments($idN)
+    {
+        $result = DB::table('comments')
+                    ->join('users', 'comments.user_id', '=', 'users.idU')
+                    ->select('users.name', 'users.surname', 'comments.titleC', 'comments.text', 'comments.like')
+                    ->where('comments.note_id', '=', $idN)
+                    ->get();
+        return $result->toJson();
     }
+
+    public function loadPhoto($idN)
+    {
+        $collection = collect([]);
+        $paths = DB::table('photos')
+            ->select('idP', 'path')
+            ->where('note_id', '=', $idN)
+            ->get();
+
+
+        foreach ($paths as $path) {
+            $collection->put('path', 'data:image/jpg;charset=utf-8;base64,  '.base64_encode(file_get_contents($path->path)));
+        }
+        return response()->json($collection, 200);
+
+        /*$subject = DB::table('notes')
+                    ->select('subject_id')
+                    ->where('idN', '=', $idN)
+                    ->pluck('subject_id');
+        $result = new Collection();
+        $dirname = "file:///home/davide/Scrivania/universita/terzoanno/secondosemestre/progettoDiSalle/AqNote-Api/AqNoteApi/public/storage/".$subject[0] . "/" . $idN."/";
+        $images = glob($dirname."*.jpg");
+        return $images;
+        foreach($images as $image) {
+            $result->push($image);
+        }
+        return response()->json($result);
+        */
+    }
+
+
+    public function checkCommentedNote(Request $request, $idN)
+    {
+        $userId = DB::table('users')->select('idU')->where('api_key', $request->header('Authorization'))->first();
+
+        $commented = DB::table('comments')->select('idCO')
+                    ->where('user_id', '=', $userId->idU)
+                    ->where('note_id', '=', $idN)
+                    ->pluck('idCO');
+
+        return $commented;
+
+    }
+}
 
 
 
