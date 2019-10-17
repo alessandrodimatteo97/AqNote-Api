@@ -23,7 +23,12 @@ class NotesController extends Controller
 
     public function notesDetail($idN)
     {
+        $hello = DB::select(DB::raw(" SELECT *
+        FROM (SELECT n.idN, n.title, n.description ,count(distinctrow c.idCO) as comments,floor(avg(c.like)-1) as avarage from notes as n left join comments as c on n.idN=c.note_id 
+        join users as u on u.idU = n.user_id join photos as p on n.idN = p.note_id where n.idN ='$idN' group by n.idN order by avarage DESC 
+        )  t1  join (SELECT  n.idN,count(p.note_id) as pages FROM  photos as p left join  notes as n on n.idN = p.note_id where p.note_id is null or p.note_id is not null group by p.note_id) t2  on t1.idN = t2.idN ;"));
 
+        return $hello;
       // $contents = Storage::get('/public/storage/dirKKK/image1-.jpg');
       $note = DB::table('notes')
                   ->select( 'title', 'description', 'user_id', 'subject_id')
@@ -172,7 +177,7 @@ class NotesController extends Controller
             ->pluck('idU');
 
         DB::table('comments')->insert([
-            'titleC' => 'Prova',
+            'titleC' => $request->input('titleC'),
             'text' => $request->input('comment'),
             'like' => $request->input('stars'),
             'user_id' => $user[0],
@@ -188,7 +193,9 @@ class NotesController extends Controller
                     ->join('users', 'comments.user_id', '=', 'users.idU')
                     ->select('users.name', 'users.surname', 'comments.titleC', 'comments.text', 'comments.like')
                     ->where('comments.note_id', '=', $idN)
+                    ->orderBy('comments.like', 'desc')
                     ->get();
+
         return $result->toJson();
     }
 
@@ -224,15 +231,52 @@ class NotesController extends Controller
 
     public function checkCommentedNote(Request $request, $idN)
     {
-        $userId = DB::table('users')->select('idU')->where('api_key', $request->header('Authorization'))->first();
 
         $commented = DB::table('comments')->select('idCO')
-                    ->where('user_id', '=', $userId->idU)
                     ->where('note_id', '=', $idN)
-                    ->pluck('idCO');
+                    ->where('user_id', '=', $request->input('idU'))
+                    ->get();
 
-        return $commented;
+        if ( ($commented->count()) == 0)
+        {
+            return response()->json(['body' => true , 'status' => 200]);
+        }
+        else {
+            return response()->json(['body' => false , 'status' => 200]);
+        }
+    }
 
+    public function addToFavourite(Request $request, $idN) {
+
+        DB::table('favourites')->insert(
+            ['user_id' => $request->input('idU'), 'note_id' => $idN]
+        );
+
+        return response()->json(['body' => 'medium', 'status' => 200]);
+    }
+
+    public function removeFromFavourite(Request $request, $idN) {
+
+        DB::table('favourites')
+            ->where('note_id', '=', $idN)
+            ->where('user_id', '=', $request->input('idU'))
+            ->delete();
+
+        return response()->json(['body' => 'light', 'status' => 200]);
+    }
+
+    public function checkInFavourite (Request $request, $idN) {
+
+        $alreadyFavourited = DB::table('favourites')
+                                ->where('note_id', '=', $idN)
+                                ->where('user_id', '=', $request->input('idU'))
+                                ->exists();
+
+        if($alreadyFavourited) {
+            return response()->json(['body' => 'medium', 'status' => 200]);
+        } else {
+            return response()->json(['body' => 'light', 'status' => 200]);
+        }
     }
 }
 
