@@ -61,11 +61,12 @@ class SubjectsController extends Controller
       return $subjects->json(['OK' => 200, 'note_id' => $subjects]);
     }
 
-    public function notesList($idS)
+    public function notesList($nameS)
     {
+        $idS = DB::table('subjects')->select('id')->where('nameS', '=', str_replace('%20', ' ', $nameS))->pluck('id');
         $hello = DB::select(DB::raw(" SELECT *
         FROM (SELECT u.name, u.surname, n.idN, n.title, n.description ,count(distinctrow c.idCO) as comments,floor(avg(c.like)-1) as avarage from notes as n left join comments as c on n.idN=c.note_id 
-        join users as u on u.idU = n.user_id join photos as p on n.idN = p.note_id where n.subject_id ='$idS' group by n.idN order by avarage DESC 
+        join users as u on u.idU = n.user_id join photos as p on n.idN = p.note_id where n.subject_id ='$idS[0]' group by n.idN order by avarage DESC 
         )  t1  join (SELECT  n.idN,count(p.note_id) as pages FROM  photos as p left join  notes as n on n.idN = p.note_id where p.note_id is null or p.note_id is not null group by p.note_id) t2  on t1.idN = t2.idN ;"));
 
         return $hello;

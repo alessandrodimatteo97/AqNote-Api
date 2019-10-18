@@ -64,17 +64,21 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('cdl/', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
   $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
-  $router->get('notesList/{idS}', 'SubjectsController@notesList');
+  $router->get('notesList/{nameS}', 'SubjectsController@notesList');
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
   $router->post('notes-photos/{idN}', 'NotesController@loadPhoto');
   $router->post('notes/upload/', 'NotesController@uploadNote');
   $router->post('photos/upload', 'NotesController@uploadPhoto');
-  $router->get('/check-commented/{idN}', 'NotesController@checkCommentedNote'); //post
+  $router->post('/check-commented/{idN}', 'NotesController@checkCommentedNote'); //post
   // $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
   $router->get('notes-comments/{idN}', 'NotesController@loadComments');
   $router->post('photos/delete', 'NotesController@deletePhoto');
  // $router->post('/notes/upload/{idS}/{idN}', 'NotesController@uploadNote'); //post
   $router->post('notes/{idN}/comment', 'NotesController@uploadComment');
+  $router->post('/add-favourite/{idN}', 'NotesController@addToFavourite');
+    $router->post('/remove-favourite/{idN}', 'NotesController@removeFromFavourite');
+    $router->post('/check-favourite/{idN}', 'NotesController@checkInFavourite');
+
 });
 
 Route::get('/api/davide/{idS}', function () {
