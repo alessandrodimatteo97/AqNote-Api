@@ -85,7 +85,7 @@ class CdlsController extends Controller
       $cdls = DB::table('degree_courses')
                   ->select('idDC', 'nameDC')
                   ->get();
-      return $cdls ->toJson();
+      return $cdls->toJson();
 
     }
 }

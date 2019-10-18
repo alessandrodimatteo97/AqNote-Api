@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Model\Note;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Database\Eloquent;
@@ -101,68 +103,101 @@ class UsersController extends Controller
 
     }
 
-    public function infoUser(Request $request)
-    {
-
-      $user = DB::table('users')
-            ->select('name', 'surname', 'mail', 'password','matriculationNumber',  'cdl_id')
-            ->where('api_key', $request->header('Authorization'))
-            ->get();
-
-      return response()->json( $user , 200);
-    }
-
     public function updateProfile(Request $request)
-    {
+    {/*
         $this->validate($request, [
             'mail' => 'required',
             'oldPassword' => 'required',
             'newPassword' => 'required',
             'name' => 'required',
             'surname' => 'required',
-            'matriculationNumber' => 'required'
+            'DegreeCourse' => 'required'
         ]);
+*/
+        // OldPassword, NewPAssword, cdlId, mail
 
         $user = DB::table('users')->where('api_key', $request->header('Authorization'))->first();
-        if(!(Hash::check($request->input('oldPassword'), $user->password)))
-        {
-            return response()->json('Old password is wrong', 401);
+        if(($request->input('OldPassword') ==! null) && !(Hash::check($request->input('OldPassword'), $user->password))) {
+
+            return response()->json($user, '409');
         }
-
-
-
-        $matriculation = DB::table('users')->select('matriculationNumber')->where('api_key', $request->header('Authorization'))->get();
-
-        if( $matriculation != ($request->input('matriculationNumber')) ) {
-            return response()->json('You cant change your matriculation number', 400);
-        }
-
-        $hashed = Hash::make($request->input('newPassword'));
-
-        $finish = DB::table('users')
-            ->where('api_key', $request->header('Authorization'))
-            ->update(
+        else {
+            if($request->input('mail') != $user->mail){
+                $hashed = Hash::make($request->input('Newpassword'));
+                $finish = DB::table('users')
+                    ->where('api_key', $request->header('Authorization'))
+                    ->update(
                         [
                             'mail' => $request->input('mail'),
                             'password' => $hashed,
-                            'name' => $request->input('name'),
-                            'surname' => $request->input('surname'),
-                            'matriculationNumber' => $request->input('matriculationNumber')
+                            'cdl_id' => $request->input('cdl_id')
+                        ]
+                    );
+            }
+            else {
+                $hashed = Hash::make($request->input('Newpassword'));
+                $finish = DB::table('users')
+                    ->where('api_key', $request->header('Authorization'))
+                    ->update(
+                        [
+                            'password' => $hashed,
+                            'cdl_id' => $request->input('cdl_id')
                         ]
                     );
 
+            }
+        }
         if($finish == 1){
-            return response()->json('Update complete', 200);
+            $final = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
+            return response()->json($final, 200);
         } else {
-            return response()->json('Server error, we cannot update', 501);
+            return response()->json($user, 501);
         }
 
     }
 
-    public function prova200()
+    public function ImageProfile(Request $request)
     {
+        if ($request->hasFile('file'))
+        {
+            $idU = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first('idU');
 
+            $namePic = $request->file('file')->getClientOriginalName();
+            if(file_exists('../public/profiles/' . $idU->idU)) {
+                unlink(glob('../public/profiles/' . $idU->idU . '/*.*')[0]);
+
+            }
+            $pathWhereSave = '../public/profiles/'.$idU->idU;
+            $imageB64 = $request->file('file');
+            $imageB64->move($pathWhereSave, $namePic);
+
+            return response()->json('OK', 200);
+          // file glob('../public/profiles/'.$user->idU.'/*.*')glob('../public/profiles/'.$user->idU.'/*.*')
+        } else {
+            return response()->json('Internal Server Error', 555)
+                ->header('Content-Type', 'application/json');
+        }
     }
+
+    public function downloadImageProfile(Request $request){
+
+       $user = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
+       //return response()->json($user->idU);
+        if( glob('../public/profiles/'.$user->idU.'/*.*')==null){
+           return ;
+        }
+        return response()->json( 'data:image/jpg;base64, '.base64_encode(file_get_contents(glob('../public/profiles/'.$user->idU.'/*.*')[0])), 200);
+       // return $collection->put('image', 'data:image/jpg;base64, '.base64_encode(file_get_contents(glob('../public/profiles/'.$user->idU.'/*.*')[0])))->toJson();
+      //  return $ImageProfile= 'data:image/jpg;base64, '.base64_encode(file_get_contents(glob('../public/profiles/'.$user->idU.'/*.*')[0]));
+
+
+   }
 
 
 }
+
+/*
+ *
+ *
+ *
+ */

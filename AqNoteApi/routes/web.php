@@ -51,7 +51,8 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('login/','UsersController@authenticate'); //post
   $router->post('signup/', 'UsersController@signUp'); //post
   $router->post('update/', 'UsersController@updateProfile') ; //post
-  $router->get('profile/', 'UsersController@infoUser'); //passareTokenInveceDiURL
+  $router->post('image/profile/upload', 'UsersController@ImageProfile');
+  $router->get('image/profile/download', 'UsersController@downloadImageProfile');
     $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
     $router->get('homepage/{id}', 'ExampleController@homePage');
