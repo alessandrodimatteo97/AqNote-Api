@@ -150,12 +150,21 @@ class NotesController extends Controller
     {
         $result = DB::table('comments')
                     ->join('users', 'comments.user_id', '=', 'users.idU')
-                    ->select('users.name', 'users.surname', 'comments.titleC', 'comments.text', 'comments.like')
+                    ->select('users.idU','users.name', 'users.surname', 'comments.titleC', 'comments.text', 'comments.like')
                     ->where('comments.note_id', '=', $idN)
                     ->orderBy('comments.like', 'desc')
                     ->get();
 
-        return $result->toJson();
+        $results = $result->map(function($item, $key){
+            if( glob('../public/profiles/'.strval($item->idU).'/*.*')==null) {
+                $item->myImg = 'data:image/jpg;base64, '.base64_encode(file_get_contents(glob('../public/profiles/default/uknown.jpeg')[0]));
+            } else {
+                $item->myImg = 'data:image/jpg;base64, '.base64_encode(file_get_contents(glob('../public/profiles/'.strval($item->idU).'/*.*')[0]));
+            }
+            return $item;
+        });
+
+        return $results->toJson();
     }
 
     public function loadPhoto($idN)

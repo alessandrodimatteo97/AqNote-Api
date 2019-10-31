@@ -90,11 +90,10 @@ class ExampleController extends Controller
            // ->groupBy('nameS')->values();
         return $fav->groupBy('nameS');
 
-       $cal= $fav->map(function ($item, $key) {
+       $cal = $fav->map(function ($item, $key) {
            return collect([
                'nameS' => $item->nameS,
                'title' => $item->title,
-
            ]);
         });
         return $ca;

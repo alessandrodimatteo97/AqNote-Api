@@ -56,7 +56,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
     $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
     $router->get('homepage/{id}', 'ExampleController@homePage');
-    Route::get('/favourites', 'ExampleController@favouriteNote');
+    $router->get('/favourites/{idU}', 'UsersController@favouriteNote');
 
     //nameSFavourites
     //$router->get('{id}/', 'UsersController@infoUser');
@@ -78,6 +78,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('/add-favourite/{idN}', 'NotesController@addToFavourite');
     $router->post('/remove-favourite/{idN}', 'NotesController@removeFromFavourite');
     $router->post('/check-favourite/{idN}', 'NotesController@checkInFavourite');
+    $router->get('/get-user-comments', 'UsersController@getMyComments');
 
 });
 

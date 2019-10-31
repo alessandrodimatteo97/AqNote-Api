@@ -193,6 +193,31 @@ class UsersController extends Controller
 
    }
 
+   public function getMyComments (Request $request)
+   {
+
+       $user = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
+       $comments = DB::table('comments')
+                    ->join('notes', 'comments.note_id', '=', 'notes.idN')
+                    ->join('users', 'notes.user_id', '=', 'users.idU')
+                    ->select('comments.titleC', 'comments.text', 'comments.like', 'notes.title', 'users.name', 'users.surname')
+                    ->where('comments.user_id', '=', $user->idU)
+                    ->get();
+
+       return response()->json($comments, 200);
+   }
+
+   public function favouriteNote($idU) {
+       $fav = DB::table('subjects')
+           ->join('notes', 'notes.subject_id', '=', 'subjects.id')
+           ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
+           ->select('subjects.nameS', 'notes.title', 'favourites.id')
+           ->where('favourites.user_id', '=', $idU)
+           ->get();
+       // ->groupBy('nameS')->values();
+       return $fav->groupBy('nameS');
+   }
+
 
 }
 
