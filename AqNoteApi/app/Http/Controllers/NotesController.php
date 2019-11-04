@@ -21,6 +21,27 @@ class NotesController extends Controller
       //$this->middleware('auth');
     }
 
+
+
+    function homePage($idDc)
+    {
+        $hello = DB::select(DB::raw(" SELECT * FROM (SELECT u.name, n.idN ,s.nameS, s.year, n.title, n.description ,count(distinctrow c.idCO) as comments,avg(c.like) as avarage  from subjects as s  join notes as n on n.subject_id=s.id join comments as c on n.idN=c.note_id join users u on u.idU = n.user_id join photos p on n.idN = p.note_id where s.degreeCourse_id =$idDc group by c.note_id order by c.note_id
+                                                )  t1  join (SELECT  note_id as idN,count(note_id) as page FROM  AqNoteApi.photos join  notes n on n.idN = photos.idP group by note_id)  t2
+                                                 on t1.idN = t2.idN order by t1.nameS;")->getValue());
+        //  $prova= collect($hello)->groupBy('nameS');//->groupBy('year')->groupBy('nameS');//;
+
+        //   return collect($hello)->groupBy('nameS');
+
+        return   $result = collect($hello)->sortBy('year')->groupBy([
+            'year',
+            function ($item) {
+                return $item->nameS;
+            },
+        ]);
+
+    }
+
+
     public function notesDetail($idN)
     {
         $hello = DB::select(DB::raw(" SELECT *

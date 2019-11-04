@@ -53,9 +53,11 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('update/', 'UsersController@updateProfile') ; //post
   $router->post('image/profile/upload', 'UsersController@ImageProfile');
   $router->get('image/profile/download', 'UsersController@downloadImageProfile');
-    $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
+  $router->get('profile/notes', 'UsersController@NotesProfile');
+  $router->get('delete/note/{idN}', 'UsersController@DeleteNote');
+  $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
-    $router->get('homepage/{id}', 'ExampleController@homePage');
+    $router->get('homepage/{id}', 'NotesController@homePage');
     Route::get('/favourites', 'ExampleController@favouriteNote');
 
     //nameSFavourites

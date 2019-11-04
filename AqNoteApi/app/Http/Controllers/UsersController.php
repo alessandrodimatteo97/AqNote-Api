@@ -192,8 +192,25 @@ class UsersController extends Controller
 
 
    }
+   public function NotesProfile(Request $request){
+      $idU = DB::table('users')
+                ->select('idU')
+                ->where('api_key', '=', $request->header('Authorization'))
+                ->first();
 
+      $query = DB::select(DB::raw("select * from (select notes.idN, notes.title, notes.subject_id as idS,count(comments.idCO) as comment, ifnull(avg(comments.like)-1, 0) as likes from notes  left join comments on  notes.idN = comments.note_id  where (comments.idCO is null || comments.idCO is not null) && notes.user_id = $idU->idU group by notes.idN) t1 join (select idN, count(photos.idP) as pages from notes left join photos on notes.idN = photos.note_id where (photos.idP is null || photos.idP is not null) group by notes.idN) t2 on t1.idN = t2.idN;"));
+    return $query;
+      //     select * from (select notes.idN, notes.title, count(comments.idCO), ifnull(avg(comments.like)-1, 0) as likes from notes  left join comments on  notes.idN = comments.note_id  where (comments.idCO is null || comments.idCO is not null) && notes.user_id = 13 group by notes.idN) t1 join (select idN, count(photos.idP) from notes left join photos on notes.idN = photos.note_id where (photos.idP is null || photos.idP is not null) group by notes.idN) t2 on t1.idN = t2.idN;
+        // la query è qui
+   }
 
+   public function DeleteNote($idN){
+      // return response()->json(('idN'));
+       $query = DB::table('notes')->where('idN', '=', $idN)->delete();
+       return response()->json($query);
+   }
+// notes deve avere numero di pagine, numero di commenti
+// stelline
 }
 
 /*
