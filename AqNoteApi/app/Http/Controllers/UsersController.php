@@ -203,6 +203,31 @@ class UsersController extends Controller
       //     select * from (select notes.idN, notes.title, count(comments.idCO), ifnull(avg(comments.like)-1, 0) as likes from notes  left join comments on  notes.idN = comments.note_id  where (comments.idCO is null || comments.idCO is not null) && notes.user_id = 13 group by notes.idN) t1 join (select idN, count(photos.idP) from notes left join photos on notes.idN = photos.note_id where (photos.idP is null || photos.idP is not null) group by notes.idN) t2 on t1.idN = t2.idN;
         // la query è qui
    }
+   public function getMyComments (Request $request)
+   {
+
+       $user = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
+       $comments = DB::table('comments')
+                    ->join('notes', 'comments.note_id', '=', 'notes.idN')
+                    ->join('users', 'notes.user_id', '=', 'users.idU')
+                    ->select('comments.titleC', 'comments.text', 'comments.like', 'notes.title', 'users.name', 'users.surname')
+                    ->where('comments.user_id', '=', $user->idU)
+                    ->get();
+
+       return response()->json($comments, 200);
+   }
+
+   public function favouriteNote($idU) {
+       $fav = DB::table('subjects')
+           ->join('notes', 'notes.subject_id', '=', 'subjects.id')
+           ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
+           ->select('subjects.nameS', 'notes.title', 'favourites.id')
+           ->where('favourites.user_id', '=', $idU)
+           ->get();
+       // ->groupBy('nameS')->values();
+       return $fav->groupBy('nameS');
+   }
+
 
    public function DeleteNote($idN){
       // return response()->json(('idN'));
