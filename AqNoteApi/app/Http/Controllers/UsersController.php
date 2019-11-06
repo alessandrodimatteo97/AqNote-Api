@@ -207,15 +207,26 @@ class UsersController extends Controller
        return response()->json($comments, 200);
    }
 
-   public function favouriteNote($idU) {
+   public function favouriteNote($idU)
+   {
+
+
+
        $fav = DB::table('subjects')
+           ->where('favourites.user_id', '=', $idU)
            ->join('notes', 'notes.subject_id', '=', 'subjects.id')
            ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
-           ->select('subjects.nameS', 'notes.title', 'favourites.id')
-           ->where('favourites.user_id', '=', $idU)
+           ->select('subjects.id', 'subjects.nameS', 'notes.title', 'notes.idN')
            ->get();
        // ->groupBy('nameS')->values();
-       return $fav->groupBy('nameS');
+       $results = $fav->map(function($item, $key){
+           $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();
+           $pages = DB::table('photos')->select('idP')->where('note_id', '=', $item->idN)->count();
+           $item->pages = $pages;
+           $item->comments = $comments;
+           return $item;
+       });
+       return $results->groupBy('nameS');
    }
 
 
