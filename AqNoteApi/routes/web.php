@@ -39,10 +39,6 @@ $router->get('/', function () use ($router) {
 // rotta di prova per la home
 Route::get('/api/download/{idN}', 'ExampleController@download');
 
-
-
-
-
 Route::get('/api/Departments', 'Controller@DepartmentsList');
 
 Route::get('/user', 'Controller@prova1');
@@ -53,9 +49,11 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('update/', 'UsersController@updateProfile') ; //post
   $router->post('image/profile/upload', 'UsersController@ImageProfile');
   $router->get('image/profile/download', 'UsersController@downloadImageProfile');
-    $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
+  $router->get('profile/notes', 'UsersController@NotesProfile');
+  $router->get('delete/note/{idN}', 'UsersController@DeleteNote');
+  $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
-    $router->get('homepage/{id}', 'ExampleController@homePage');
+    $router->get('homepage/{id}', 'NotesController@homepage');
     $router->get('/favourites/{idU}', 'UsersController@favouriteNote');
 
     //nameSFavourites
