@@ -63,7 +63,10 @@ class UsersController extends Controller
       'surname' => 'required',
       'cdl' => 'required',
        ]);
-
+;
+        if(!($request->filled('password')) ||  !($request->filled('repeatPassword'))){
+            return response()->json('password are void',307);
+        }
 
         $id_cdl = DB::table('degree_courses')
                         ->select('idDC')
@@ -99,24 +102,31 @@ class UsersController extends Controller
            echo  $request->input('name');
           echo  $request->input('surname');
           echo  $id_cdl[0];
-        //return response()->json('Registration Complete', 200);
+        return response()->json('Registration Complete', 200);
 
     }
 
     public function updateProfile(Request $request)
-    {/*
-        $this->validate($request, [
-            'mail' => 'required',
-            'oldPassword' => 'required',
-            'newPassword' => 'required',
-            'name' => 'required',
-            'surname' => 'required',
-            'DegreeCourse' => 'required'
-        ]);
-*/
-        // OldPassword, NewPAssword, cdlId, mail
+    {
 
-        $user = DB::table('users')->where('api_key', $request->header('Authorization'))->first();
+        if(!($request->filled('OldPassword'))){
+            return response()->json('Old password is void',422);
+        }
+
+
+        $user = DB::table('users')
+            ->where('api_key', $request->header('Authorization'))
+            ->first();
+
+        if((DB::table('users')
+                ->where('mail', '=', $request->input('mail'))
+                ->where('api_key', '<>', $request->header('Authorization'))
+                ->count('idU')) >= 1
+            && ($request->filled('mail')))
+        {
+            return response()->json('We already have a user with this email',421);
+        }
+
         if(($request->input('OldPassword') ==! null) && !(Hash::check($request->input('OldPassword'), $user->password))) {
 
             return response()->json($user, '409');

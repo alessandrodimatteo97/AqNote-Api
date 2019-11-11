@@ -32,12 +32,14 @@ class NotesController extends Controller
 
         //   return collect($hello)->groupBy('nameS');
 
-        return   $result = collect($hello)->sortBy('year')->groupBy([
+        return $result = collect($hello)->sortBy('year')->groupBy([
             'year',
             function ($item) {
                 return $item->nameS;
             },
         ]);
+
+
 
     }
 
@@ -173,7 +175,7 @@ class NotesController extends Controller
                     ->join('users', 'comments.user_id', '=', 'users.idU')
                     ->select('users.idU','users.name', 'users.surname', 'comments.titleC', 'comments.text', 'comments.like')
                     ->where('comments.note_id', '=', $idN)
-                    ->orderBy('comments.like', 'desc')
+                    ->orderBy('comments.idCO', 'desc')
                     ->get();
 
         $results = $result->map(function($item, $key){
