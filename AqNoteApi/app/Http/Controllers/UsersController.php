@@ -117,6 +117,7 @@ class UsersController extends Controller
         // OldPassword, NewPAssword, cdlId, mail
 
         $user = DB::table('users')->where('api_key', $request->header('Authorization'))->first();
+    //    return $request->input('OldPassword');
         if(($request->input('OldPassword') ==! null) && !(Hash::check($request->input('OldPassword'), $user->password))) {
 
             return response()->json($user, '409');
@@ -232,8 +233,11 @@ class UsersController extends Controller
        $results = $fav->map(function($item, $key){
            $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();
            $pages = DB::table('photos')->select('idP')->where('note_id', '=', $item->idN)->count();
+         //  $favourites = DB::table('')->select()
+           $like = DB::table('comments')->select('like')->where('note_id', '=', $item->idN)->avg('like');
            $item->pages = $pages;
            $item->comments = $comments;
+           $item->like = $like-1;
            return $item;
        });
        return $results->groupBy('nameS');

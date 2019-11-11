@@ -25,19 +25,32 @@ class NotesController extends Controller
 
     function homepage($idDc)
     {
-        $hello = DB::select(DB::raw(" SELECT * FROM (SELECT u.name, n.idN ,s.nameS, s.year, n.title, n.description ,count(distinctrow c.idCO) as comments,avg(c.like) as avarage  from subjects as s  join notes as n on n.subject_id=s.id join comments as c on n.idN=c.note_id join users u on u.idU = n.user_id join photos p on n.idN = p.note_id where s.degreeCourse_id =$idDc group by c.note_id order by c.note_id
-                                                )  t1  join (SELECT  note_id as idN,count(note_id) as page FROM  AqNoteApi.photos join  notes n on n.idN = photos.idP group by note_id)  t2
-                                                 on t1.idN = t2.idN order by t1.nameS;")->getValue());
-        //  $prova= collect($hello)->groupBy('nameS');//->groupBy('year')->groupBy('nameS');//;
+        $home = DB::table('subjects')
+            ->join('notes', 'notes.subject_id', '=', 'subjects.id')
+            //  ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
+            ->select('subjects.year', 'subjects.nameS', 'notes.title', 'notes.idN')
+            ->where('subjects.degreeCourse_id', '=', $idDc)
 
-        //   return collect($hello)->groupBy('nameS');
+            ->get();
+        // ->groupBy('nameS')->values();
+     return   $results = $home->map(function($item, $key){
+            $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();
+            $pages = DB::table('photos')->select('idP')->where('note_id', '=', $item->idN)->count();
+            //  $favourites = DB::table('')->select()
+            $like = DB::table('comments')->select('like')->where('note_id', '=', $item->idN)->avg('like');
+            $item->page = $pages;
+            $item->comments = $comments;
+            $item->avarage = $like-1;
+            return $item;
+        })->where('comments','>',0)->sortBy('year')->groupBy([
+         'year',
+         function ($item) {
+             return $item->nameS;
+         },
+     ]);
+        //   $results = $results->where('comments','>',0)->all();
 
-        return   $result = collect($hello)->sortBy('year')->groupBy([
-            'year',
-            function ($item) {
-                return $item->nameS;
-            },
-        ]);
+
 
     }
 
