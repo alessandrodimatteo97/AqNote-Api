@@ -31,11 +31,24 @@ class SubjectsController extends Controller
     public function listSubject($idC)
     {
       $subjects = DB::table('subjects')
-                  ->select('id', 'nameS', 'year', 'degreeCourse_id')
+                  ->select('id', 'nameS', 'year')
                   ->where('degreeCourse_id', $idC)
                   ->get();
 
-      return $subjects->toJson();
+      return $subjects->sortBy('year')->groupBy([
+          'year',
+          function ($item) {
+              return $item->nameS;
+          },
+      ]);
+    }
+
+    public function listSubject1($idC){
+        $subjects = DB::table('subjects')
+            ->select('id', 'nameS', 'year')
+            ->where('degreeCourse_id', $idC)
+            ->get();
+        return response()->json($subjects);
     }
 
     public function infoSubject($idS)

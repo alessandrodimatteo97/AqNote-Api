@@ -32,6 +32,7 @@ class NotesController extends Controller
             ->where('subjects.degreeCourse_id', '=', $idDc)
 
             ->get();
+      //  return $home;
         // ->groupBy('nameS')->values();
      return   $results = $home->map(function($item, $key){
             $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();

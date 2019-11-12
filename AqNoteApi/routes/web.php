@@ -61,7 +61,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->get('department/', 'DepartmentsController@listDepart');
   $router->get('cdl/', 'CdlsController@listCdl');
   $router->get('subjectlist/{idC}', 'SubjectsController@listSubject');
-  $router->get('subjectlist/{idC}/{year}', 'SubjectsController@listSubYear');
+  $router->get('subjectlist1/{idC}', 'SubjectsController@listSubject1');
   $router->get('notesList/{nameS}', 'SubjectsController@notesList');
   $router->get('notes/{idN}', 'NotesController@notesDetail'); //post
   $router->post('notes-photos/{idN}', 'NotesController@loadPhoto');
