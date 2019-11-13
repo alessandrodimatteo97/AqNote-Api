@@ -139,22 +139,32 @@ class UsersController extends Controller
                     ->update(
                         [
                             'mail' => $request->input('mail'),
-                            'password' => $hashed,
+                       //     'password' => $hashed,
                             'cdl_id' => $request->input('cdl_id')
                         ]
                     );
             }
             else {
+                $finish = DB::table('users')
+                    ->where('api_key', $request->header('Authorization'))
+                    ->update(
+                        [
+                           // 'password' => $hashed,
+                            'cdl_id' => $request->input('cdl_id')
+                        ]
+                    );
+
+            }
+            if($request->input('Newpassword')!=''){
                 $hashed = Hash::make($request->input('Newpassword'));
+
                 $finish = DB::table('users')
                     ->where('api_key', $request->header('Authorization'))
                     ->update(
                         [
                             'password' => $hashed,
-                            'cdl_id' => $request->input('cdl_id')
                         ]
                     );
-
             }
         }
         if($finish == 1){
