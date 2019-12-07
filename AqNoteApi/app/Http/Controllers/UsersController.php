@@ -49,7 +49,7 @@ class UsersController extends Controller
 
               ]);
           }else{
-              return response()->json('fail' ,411);
+              return response()->json('Login error' ,411);
           }
     }
 
@@ -82,7 +82,7 @@ class UsersController extends Controller
                         ->where('mail', '=', $request->input('email'))
                         ->pluck('mail');
 
-       if($userExists == null){
+       if($userExists != null){
            return response()->json('UserExists Already',411);
        }
 
@@ -97,11 +97,7 @@ class UsersController extends Controller
            'cdl_id' => $id_cdl[0]
           ]
         ]);
-        echo  $request->input('email');
-        echo  $hashed;
-           echo  $request->input('name');
-          echo  $request->input('surname');
-          echo  $id_cdl[0];
+
         return response()->json('Registration Complete', 200);
 
     }
@@ -110,7 +106,7 @@ class UsersController extends Controller
     {
 
         if(!($request->filled('OldPassword'))){
-            return response()->json('Old password is void',422);
+            return response()->json('You must enter your old password',422);
         }
 
 
@@ -139,7 +135,7 @@ class UsersController extends Controller
                     ->update(
                         [
                             'mail' => $request->input('mail'),
-                       //     'password' => $hashed,
+                            //     'password' => $hashed,
                             'cdl_id' => $request->input('cdl_id')
                         ]
                     );
@@ -149,13 +145,13 @@ class UsersController extends Controller
                     ->where('api_key', $request->header('Authorization'))
                     ->update(
                         [
-                           // 'password' => $hashed,
+                            // 'password' => $hashed,
                             'cdl_id' => $request->input('cdl_id')
                         ]
                     );
 
             }
-            if($request->input('Newpassword')!=''){
+            if($request->input('Newpassword')!='') {
                 $hashed = Hash::make($request->input('Newpassword'));
 
                 $finish = DB::table('users')
@@ -171,11 +167,10 @@ class UsersController extends Controller
             $final = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
             return response()->json($final, 200);
         } else {
-            return response()->json($user, 501);
+            return response()->json($user, 515);
         }
 
     }
-
     public function ImageProfile(Request $request)
     {
         if ($request->hasFile('file'))
@@ -237,30 +232,31 @@ class UsersController extends Controller
        return response()->json($comments, 200);
    }
 
-   public function favouriteNote($idU)
-   {
+    public function favouriteNote(Request $request)
+    {
+
+        $user = DB::table('users')->where('api_key', '=', $request->header('Authorization'))->first();
 
 
-
-       $fav = DB::table('subjects')
-           ->where('favourites.user_id', '=', $idU)
-           ->join('notes', 'notes.subject_id', '=', 'subjects.id')
-           ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
-           ->select('subjects.id', 'subjects.nameS', 'notes.title', 'notes.idN')
-           ->get();
-       // ->groupBy('nameS')->values();
-       $results = $fav->map(function($item, $key){
-           $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();
-           $pages = DB::table('photos')->select('idP')->where('note_id', '=', $item->idN)->count();
-         //  $favourites = DB::table('')->select()
-           $like = DB::table('comments')->select('like')->where('note_id', '=', $item->idN)->avg('like');
-           $item->pages = $pages;
-           $item->comments = $comments;
-           $item->like = $like-1;
-           return $item;
-       });
-       return $results->groupBy('nameS');
-   }
+        $fav = DB::table('subjects')
+            ->where('favourites.user_id', '=', $user->idU)
+            ->join('notes', 'notes.subject_id', '=', 'subjects.id')
+            ->join('favourites', 'favourites.note_id', '=', 'notes.idN')
+            ->select('subjects.id', 'subjects.nameS', 'notes.title', 'notes.idN')
+            ->get();
+        // ->groupBy('nameS')->values();
+        $results = $fav->map(function($item, $key){
+            $comments = DB::table('comments')->select('idCO')->where('note_id', '=', $item->idN)->count();
+            $pages = DB::table('photos')->select('idP')->where('note_id', '=', $item->idN)->count();
+            //  $favourites = DB::table('')->select()
+            $like = DB::table('comments')->select('like')->where('note_id', '=', $item->idN)->avg('like');
+            $item->pages = $pages;
+            $item->comments = $comments;
+            $item->like = $like-1;
+            return $item;
+        });
+        return $results->groupBy('nameS');
+    }
 
 
    public function DeleteNote($idN){

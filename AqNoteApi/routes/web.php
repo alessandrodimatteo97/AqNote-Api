@@ -54,7 +54,7 @@ $router->group(['prefix' => 'api/'], function ($router) {
   $router->post('notes-update-comment/{idN}', 'NotesController@uploadComment');
 
     $router->get('homepage/{id}', 'NotesController@homepage');
-    $router->get('/favourites/{idU}', 'UsersController@favouriteNote');
+    $router->get('/favourites/', 'UsersController@favouriteNote');
 
     //nameSFavourites
     //$router->get('{id}/', 'UsersController@infoUser');
